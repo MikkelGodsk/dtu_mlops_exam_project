@@ -1,0 +1,7 @@
+
+lr:
+  value: 0.001
+epochs:
+  value: 30
+batch_size:
+  value: 100
