@@ -56,7 +56,7 @@ be installed with `pip install click markdown`.
 >
 > Example:
 >
-> *s183319, ss194345, s185231, s185231, s194333*
+> *s183319, ss194345, s185231, s184399, s194333*
 >
 > Answer:
 
