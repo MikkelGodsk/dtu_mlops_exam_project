@@ -54,8 +54,16 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+%<p><small> 
 
-The goal of this project is to train a <a target="_blank" href="https://huggingface.co/t5-small">t5-small model</a> to translate text from English to German. This model is based on the <a target="_blank" href="https://github.com/huggingface/transformers">PyTorch Transformer framework</a>.
+In this project we wish to obtain a translater from English to German. We finetune the model <a target="_blank" href="https://huggingface.co/t5-small">t5-small model</a> on <a target="_blank" href="https://huggingface.co/datasets/wmt19"> WMT19 dataset</a>. This dataset contains translation pairs in multiple languages and is related to a conference on machine learning translation <a target="_blank" href="https://machinetranslate.org/wmt">(WMT)</a>. 
+    
+T5 is a text-to-text model and the model from Huggingface is already able to translate multiple languages as well as perform other tasks within NLP. However, we seek to finetune it for translation of english to german. In order to train the model we utilize the <a target="_blank" href="https://github.com/huggingface/transformers">Transformer framework</a>. This framework provides a large variery of tools for working with transformers in Python, where we will utilize relevant functions for finetuning. 
+    
+In this project we highly focus on obtaining a good model pipeline. In order to obtain this goal we will utilize many different tools. 
 
-We will be training on the <a target="_blank" href="https://huggingface.co/datasets/wmt19/viewer/de-en/train?fbclid=IwAR0sxM0X5r32pzezGuZ09Nocah90Avtm8e8feuAHd9wmFaFW7VGlCw8c2dI">wmt19 dataset</a>.
+The structure of this project is based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience
+    
+%</small></p>
+
+
