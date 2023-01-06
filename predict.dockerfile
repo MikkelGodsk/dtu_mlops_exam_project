@@ -1,5 +1,5 @@
 # Import a base image so we don't have to start from scratch
-FROM python:3.12-rc-bullseye
+FROM python:3.10-slim
 
 # Run a bunch of linux commands
 RUN apt update && \         
