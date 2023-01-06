@@ -47,7 +47,7 @@ be installed with `pip install click markdown`.
 ### Question 1
 > **Enter the group number you signed up on <learn.inside.dtu.dk>**
 >
-> Answer:
+> Answer: 41
 
 --- question 1 fill here ---
 
@@ -56,7 +56,7 @@ be installed with `pip install click markdown`.
 >
 > Example:
 >
-> *sXXXXXX, sXXXXXX, sXXXXXX*
+> *s183319, ss194345, s185231, s185231, s194333*
 >
 > Answer:
 
