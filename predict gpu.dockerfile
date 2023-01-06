@@ -1,6 +1,6 @@
 # Import a base image so we don't have to start from scratch
-FROM python:3.12-rc-bullseye
-# nvcr.io/nvidia/pytorch:22.07-py3
+FROM nvcr.io/nvidia/pytorch:22.07-py3
+
 # Run a bunch of linux commands
 RUN apt update && \         
     apt install --no-install-recommends -y build essential gcc & \
@@ -18,4 +18,4 @@ RUN pip install -r requirements.txt --no-cache-dir
 
 # Set entry point, i.e. which file we run with which argument when running the docker container.
 # The -u flag makes it print to console rather than the docker log file.
-ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
+ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]

@@ -1,6 +1,6 @@
 # Import a base image so we don't have to start from scratch
-FROM python:3.12-rc-bullseye
-# nvcr.io/nvidia/pytorch:22.07-py3
+FROM nvcr.io/nvidia/pytorch:22.07-py3
+
 # Run a bunch of linux commands
 RUN apt update && \         
     apt install --no-install-recommends -y build essential gcc & \
