@@ -55,3 +55,7 @@ Project Organization
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+The goal of this project is to train a <a target="_blank" href="https://huggingface.co/t5-small">t5-small model</a> to translate text from English to German. This model is based on the <a target="_blank" href="https://github.com/huggingface/transformers">PyTorch Transformer framework</a>.
+
+We will be training on the <a target="_blank" href="https://huggingface.co/datasets/wmt19/viewer/de-en/train?fbclid=IwAR0sxM0X5r32pzezGuZ09Nocah90Avtm8e8feuAHd9wmFaFW7VGlCw8c2dI">wmt19 dataset</a>.
