@@ -9,7 +9,7 @@ DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
 
 class Model(pl.LightningModule):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, lr, *args, **kwargs):
         """
             Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
         """
@@ -17,6 +17,7 @@ class Model(pl.LightningModule):
         self.tokenizer = T5Tokenizer.from_pretrained("t5-small")
         self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small")
         self.t5_model.to(DEVICE)
+        self.lr = lr
 
     def forward(self, x: List[str]) -> List[str]:
         """
@@ -84,6 +85,9 @@ class Model(pl.LightningModule):
         self.log("test loss", loss)
         # TODO: Add metrics
         return loss
+
+    def configure_optimizers(self) -> torch.optim.Optimizer:
+        return torch.optim.Adam(self.t5_model.parameters(), lr=self.lr)
 
 
 if __name__ == "__main__":
