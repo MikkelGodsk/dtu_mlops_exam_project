@@ -1,36 +1,102 @@
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-import torch
+from typing import List, Optional
+
 import pytorch_lightning as pl
-import sentencepiece # so it is put into requirements.txt
+import sentencepiece  # To ensure it is found by pipreqs
+import torch
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
-DEVICE = 'cpu' if not torch.cuda.is_available() else 'cuda'
 
 class Model(pl.LightningModule):
     def __init__(self, *args, **kwargs):
+        """
+            Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
+        """
         super().__init__(*args, **kwargs)
         self.tokenizer = T5Tokenizer.from_pretrained("t5-small")
         self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small")
-        self.t5_model.to(DEVICE)   # https://huggingface.co/docs/transformers/model_doc/t5
-        assert isinstance(next(iter(self.t5_model.parameters())), torch.Tensor)  # To ensure that it runs in torch.
+        self.t5_model.to(DEVICE)
 
-    def forward(self, x):
+    def forward(self, x: List[str]) -> List[str]:
+        """
+            https://huggingface.co/docs/transformers/model_doc/t5#inference
+        """
+
         input_ids = self.tokenizer(
-            x, 
-            return_tensors="pt",
-            padding=True,
-            truncation=True,
-            max_length=128
-        ).input_ids.to(DEVICE)  # Batch size 1
-        
+            x, return_tensors="pt", padding=True, truncation=True, max_length=128
+        ).input_ids.to(
+            DEVICE
+        )  # Batch size 1
+
         # forward pass
-        outputs = self.t5_model.generate(input_ids=input_ids)   # For training, see https://huggingface.co/docs/transformers/model_doc/t5#training
+        outputs = self.t5_model.generate(input_ids=input_ids)
 
-        return [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]  # https://huggingface.co/docs/transformers/model_doc/t5#inference
+        return [
+            self.tokenizer.decode(output, skip_special_tokens=True)
+            for output in outputs
+        ]
+
+    def _inference_training(
+        self, batch: List[str], batch_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        """
+            From https://huggingface.co/docs/transformers/model_doc/t5#training
+        """
+        data, labels = batch
+        encoding = self.tokenizer(
+            data,
+            return_tensors="pt",
+            padding="longest",
+            truncation=True,
+            max_length=512,
+        )
+        target_encoding = self.tokenizer(
+            labels, return_tensors="pt", padding=True, truncation=True, max_length=128
+        ).input_ids.to(DEVICE)
+        input_ids = encoding["input_ids"].to(DEVICE)
+        attention_mask = encoding["attention_mask"].to(DEVICE)
+        loss = self.t5_model(
+            input_ids=input_ids, attention_mask=attention_mask, labels=target_encoding,
+        ).loss
+        return loss
+
+    def training_step(
+        self, batch: List[str], batch_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        loss = self._inference_training(batch, batch_idx)
+        self.log("train loss", loss)
+        # TODO: Add metrics
+        return loss
+
+    def validation_step(
+        self, batch: List[str], batch_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        loss = self._inference_training(batch, batch_idx)
+        self.log("val loss", loss)
+        # TODO: Add metrics
+        return loss
+
+    def test_step(
+        self, batch: List[str], batch_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        loss = self._inference_training(batch, batch_idx)
+        self.log("test loss", loss)
+        # TODO: Add metrics
+        return loss
 
 
-if __name__ == '__main__':
-    input = ['The house is wonderful', 'I am hungry']
+if __name__ == "__main__":
+    """
+        Example.
+        TODO: Put in tests
+    """
+    input = ["The house is wonderful", "I am hungry"]
+    labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
     model = Model()
-    print(model(input))
+    assert isinstance(
+        next(iter(model.t5_model.parameters())), torch.Tensor
+    )  # To ensure that it runs in torch.
 
+    print(model(input))
+    print(model.training_step((input, labels)))
