@@ -1,0 +1,15 @@
+program: train_model.py
+method: bayes
+metric:
+  name: name_of_loss
+  goal: minimize
+parameters:
+  lr:
+    min: 0.00001
+    max: 0.01
+  epochs:
+    min: 2
+    max: 10
+  batch_size:
+    distribution: constant
+    value: 100

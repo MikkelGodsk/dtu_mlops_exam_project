@@ -95,6 +95,7 @@ if __name__ == "__main__":
         Example.
         TODO: Put in tests
     """
+    
     input = ["The house is wonderful", "I am hungry"]
     labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
     model = Model()
