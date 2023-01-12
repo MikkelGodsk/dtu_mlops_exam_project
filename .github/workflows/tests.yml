@@ -1,4 +1,4 @@
-name: MNIST tests
+name: Tests
 
 on:
   push:
@@ -47,8 +47,6 @@ jobs:
       - uses: iterative/setup-dvc@v1
       - name: Download data
         run: dvc pull
-        env:
-          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
       - name: Test with pytest
         run: |
           pytest
