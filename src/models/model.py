@@ -39,7 +39,7 @@ class Model(pl.LightningModule):
         ]
 
     def _inference_training(
-        self, batch: List[str], batch_idx: Optional[int] = None
+        self, batch: List[List[str]], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         """
             From https://huggingface.co/docs/transformers/model_doc/t5#training
