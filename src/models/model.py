@@ -11,7 +11,7 @@ DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
 
 class Model(pl.LightningModule):
-    def __init__(self, lr, batch_size, *args, **kwargs):
+    def __init__(self, lr=1e-3, batch_size=1, *args, **kwargs):
         """
             Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
         """
@@ -42,7 +42,7 @@ class Model(pl.LightningModule):
         ]
 
     def _inference_training(
-        self, batch: List[str], batch_idx: Optional[int] = None
+        self, batch: List[List[str]], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         """
             From https://huggingface.co/docs/transformers/model_doc/t5#training
@@ -93,19 +93,3 @@ class Model(pl.LightningModule):
     def configure_optimizers(self) -> torch.optim.Optimizer:
         return torch.optim.Adam(self.t5_model.parameters(), lr=self.lr)
 
-
-if __name__ == "__main__":
-    """
-        Example.
-        TODO: Put in tests
-    """
-    
-    input = ["The house is wonderful", "I am hungry"]
-    labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
-    model = Model(0.001)
-    assert isinstance(
-        next(iter(model.t5_model.parameters())), torch.Tensor
-    )  # To ensure that it runs in torch.
-
-    print(model(input))
-    print(model.training_step((input, labels)))

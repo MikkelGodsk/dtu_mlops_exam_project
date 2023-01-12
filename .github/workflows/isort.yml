@@ -1,0 +1,43 @@
+name: isort
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+        os: ["ubuntu-latest"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Install isort
+        run: pip install isort
+      - name: Run isort
+        run: isort .
