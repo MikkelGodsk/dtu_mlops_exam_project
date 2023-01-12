@@ -88,3 +88,6 @@ target/
 # Mypy cache
 .mypy_cache/
 /data
+
+# Excluding Felix' virtual environment
+/02476_venv/
