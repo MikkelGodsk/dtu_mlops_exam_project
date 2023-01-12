@@ -1,5 +1,7 @@
 import pytest
 import torch
+from pytorch_lightning import Trainer
+from copy import deepcopy
 
 from src.models.model import Model
     
@@ -24,10 +26,23 @@ def test_training_step():
     input = ["The house is wonderful", "I am hungry"]
     labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
     model = Model()
-    old_params = model.state_dict()
     loss = model.training_step((input, labels))
-    new_params = model.state_dict()
     assert isinstance(loss.item(), float)
     assert isinstance(loss, torch.Tensor)
-    #for k in old_params.keys():
-    #    assert torch.any(old_params[k] != new_params[k])
+
+
+def test_training_loop():
+    raise NotImplemented
+    input = ["The house is wonderful", "I am hungry"]
+    labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
+    model = Model()
+    old_params = deepcopy(model.state_dict())
+    ds = torch.utils.data.TensorDataset(input, labels)   # Needs to be torch tensor or a custom dataset
+    trainer = Trainer()
+    
+
+    #train model one step in lightning
+    new_params = deepcopy(model.state_dict())
+    for k in old_params.keys():
+        assert torch.any(old_params[k] != new_params[k])
+
