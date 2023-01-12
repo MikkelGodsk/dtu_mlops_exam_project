@@ -2,11 +2,10 @@ import pytorch_lightning as pl
 import wandb
 from torch.utils.data import DataLoader
 
-from src.data.download_dataset import dataset
+from datasets import Dataset
 from src.models import _DATA_PATH
 from src.models.model import Model
 
-# run using "python src/models/train_model.py"
 if __name__ == "__main__":
 
     wandb.init(
@@ -21,8 +20,11 @@ if __name__ == "__main__":
 
     model = Model(lr=lr, batch_size=batch_size)
     wandb.watch(model, log_freq=100)
-    trainloader = DataLoader(dataset["train"], batch_size=batch_size)
-    testloader = DataLoader(dataset["validation"], batch_size=batch_size)
+
+    trainset = Dataset.load_from_disk("data/processed/train")
+    testset = Dataset.load_from_disk("data/processed/train")
+    trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=10)
+    testloader = DataLoader(testset, batch_size=batch_size, num_workers=10)
 
     trainer = pl.Trainer(
         max_epochs=epochs, default_root_dir=""

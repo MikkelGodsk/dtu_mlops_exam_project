@@ -3,18 +3,27 @@ import logging
 from pathlib import Path
 
 import click
+from datasets import load_dataset, Dataset
 from dotenv import find_dotenv, load_dotenv
+import os
 
 
 @click.command()
-@click.argument("input_filepath", type=click.Path(exists=True))
-@click.argument("output_filepath", type=click.Path())
-def main(input_filepath, output_filepath):
+@click.argument('cache_dir', type=click.Path(exists=True))
+@click.argument('k', type=int)
+def main(cache_dir, k):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
+
+    dataset = load_dataset('wmt19', 'de-en', cache_dir=cache_dir)
+
+    traindata = Dataset.from_dict(dataset["train"][:k])
+    valdata = Dataset.from_dict(dataset["validation"][:k])
+    traindata.save_to_disk(os.path.join(cache_dir, "processed", "train"))
+    valdata.save_to_disk(os.path.join(cache_dir, "processed", "train"))
 
 
 if __name__ == "__main__":
