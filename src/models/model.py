@@ -5,6 +5,8 @@ import sentencepiece  # To ensure it is found by pipreqs
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+from src.models import _MODEL_PATH
+
 DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
 
@@ -14,8 +16,8 @@ class Model(pl.LightningModule):
             Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
         """
         super().__init__(*args, **kwargs)
-        self.tokenizer = T5Tokenizer.from_pretrained("t5-small")
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small")
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
+        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
         self.t5_model.to(DEVICE)
         self.lr = lr
 
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     
     input = ["The house is wonderful", "I am hungry"]
     labels = ["Das Haus ist wunderbar.", "Ich habe hunger."]
-    model = Model()
+    model = Model(0.001)
     assert isinstance(
         next(iter(model.t5_model.parameters())), torch.Tensor
     )  # To ensure that it runs in torch.

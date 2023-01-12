@@ -13,3 +13,4 @@ sentencepiece==0.1.96
 setuptools==65.5.0
 torch==1.13.1
 transformers==4.25.1
+wandb
