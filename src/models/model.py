@@ -5,19 +5,22 @@ import sentencepiece  # To ensure it is found by pipreqs
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+from src.models import _MODEL_PATH
+
 DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
 
 class Model(pl.LightningModule):
-    def __init__(self, lr=1e-3, *args, **kwargs):
+    def __init__(self, lr=1e-3, batch_size=1, *args, **kwargs):
         """
             Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
         """
         super().__init__(*args, **kwargs)
-        self.tokenizer = T5Tokenizer.from_pretrained("t5-small")
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small")
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
+        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
         self.t5_model.to(DEVICE)
         self.lr = lr
+        self.batch_size = batch_size
 
     def forward(self, x: List[str]) -> List[str]:
         """
@@ -44,7 +47,8 @@ class Model(pl.LightningModule):
         """
             From https://huggingface.co/docs/transformers/model_doc/t5#training
         """
-        data, labels = batch
+        data = batch["translation"]["en"]
+        labels = batch["translation"]["de"]
         encoding = self.tokenizer(
             data,
             return_tensors="pt",
@@ -66,7 +70,7 @@ class Model(pl.LightningModule):
         self, batch: List[str], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         loss = self._inference_training(batch, batch_idx)
-        self.log("train loss", loss)
+        self.log("train loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
         return loss
 
@@ -74,7 +78,7 @@ class Model(pl.LightningModule):
         self, batch: List[str], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         loss = self._inference_training(batch, batch_idx)
-        self.log("val loss", loss)
+        self.log("val loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
         return loss
 
@@ -82,7 +86,7 @@ class Model(pl.LightningModule):
         self, batch: List[str], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         loss = self._inference_training(batch, batch_idx)
-        self.log("test loss", loss)
+        self.log("test loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
         return loss
 

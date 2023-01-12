@@ -4,4 +4,4 @@ lr:
 epochs:
   value: 30
 batch_size:
-  value: 100
+  value: 16
