@@ -90,5 +90,11 @@ target/
 .mypy_cache/
 /data
 
+# Excluding Felix' virtual environment
+/02476_venv/
+
+# Excluding Felix' virtual environment
+/02476_venv/
+
 # wandb
 /wandb/
