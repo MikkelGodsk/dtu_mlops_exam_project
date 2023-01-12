@@ -1,7 +1,19 @@
+import pytorch_lightning as pl
 import wandb
-from model import Model
+from torch.utils.data import DataLoader
 
-wandb.init(project="mlops_exam_project", entity="chrillebon", config="config/default_params.yaml")
+from src.data.download_dataset import dataset
+from src.models import _DATA_PATH
+from src.models.model import Model
+
+# run using "python src/models/train_model.py"
+if __name__ == "__main__":
+
+    wandb.init(
+        project="mlops_exam_project",
+        entity="chrillebon",
+        config="src/models/config/default_params.yaml",
+    )
 
 lr = wandb.config.lr
 epochs = wandb.config.epochs
@@ -10,4 +22,12 @@ batch_size = wandb.config.batch_size
 model = Model
 wandb.watch(model, log_freq=100)
 
-print("hello world")
+    trainloader = DataLoader(dataset["train"], batch_size=batch_size)
+    testloader = DataLoader(dataset["validation"], batch_size=batch_size)
+
+    trainer = pl.Trainer(
+        max_epochs=epochs, default_root_dir=""
+    )  # , logger=pl.loggers.WandbLogger(project="mnist"), log_every_n_steps = 1
+    trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
+
+    print("Done!")
