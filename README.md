@@ -9,7 +9,7 @@ T5 is a text-to-text model and the model from Huggingface is already able to tra
     
 In this project we highly focus on obtaining a good model pipeline. In order to obtain this goal we will utilize many different tools such as cookiecutter for document structure, docker to containerising our code as dvc for handeling data.
 
-Furthermore Weights and Biases will provide usefull insight in the performance of the model.
+Furthermore Weights and Biases will provide useful insight in the performance of the model.
 
     
 
