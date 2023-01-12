@@ -1,6 +1,4 @@
 [core]
     remote = remote_storage
-['remote "storage"']
-    url = gdrive://1ciF763RyzD3UrbljCFl01r806NeDJ796
 ['remote "remote_storage"']
     url = gs://wmt19-de-en/
