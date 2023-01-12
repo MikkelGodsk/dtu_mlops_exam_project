@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import pytorch_lightning as pl
 import sentencepiece  # To ensure it is found by pipreqs
@@ -17,7 +17,11 @@ class Model(pl.LightningModule):
         """
         super().__init__(*args, **kwargs)
         self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
+
+        self.t5_model = T5ForConditionalGeneration.from_pretrained(
+            "t5-small", cache_dir=_MODEL_PATH
+        )
+
         self.t5_model.to(DEVICE)
         self.lr = lr
         self.batch_size = batch_size
@@ -42,7 +46,7 @@ class Model(pl.LightningModule):
         ]
 
     def _inference_training(
-        self, batch: List[List[str]], batch_idx: Optional[int] = None
+        self, batch: Dict[str, Dict[str, List[str]]], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
         """
             From https://huggingface.co/docs/transformers/model_doc/t5#training
@@ -92,4 +96,3 @@ class Model(pl.LightningModule):
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
         return torch.optim.Adam(self.t5_model.parameters(), lr=self.lr)
-
