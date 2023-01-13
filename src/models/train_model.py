@@ -23,8 +23,8 @@ if __name__ == "__main__":
 
     trainset = Dataset.load_from_disk("data/processed/train")
     testset = Dataset.load_from_disk("data/processed/train")
-    trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=10)
-    testloader = DataLoader(testset, batch_size=batch_size, num_workers=10)
+    trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=8)
+    testloader = DataLoader(testset, batch_size=batch_size, num_workers=8)
 
     trainer = pl.Trainer(
         max_epochs=epochs, default_root_dir=""
