@@ -27,8 +27,7 @@ if __name__ == "__main__":
     testloader = DataLoader(testset, batch_size=batch_size, num_workers=8)
 
     trainer = pl.Trainer(
-        max_epochs=epochs, default_root_dir=""
-    )  # , logger=pl.loggers.WandbLogger(project="mnist"), log_every_n_steps = 1
+        max_epochs=epochs, default_root_dir="")#, accelerator='gpu', devices = [6], strategy="ddp") 
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
 
