@@ -38,7 +38,7 @@ class Model(pl.LightningModule):
         ValueError
             If the learning rate isn't positive.
         TypeError
-            If the batch size is not a float.
+            If the batch size is not an integer.
         ValueError
             If the batch size is less than or equal to zero.
         """
@@ -50,8 +50,8 @@ class Model(pl.LightningModule):
         if lr <= 0:
             raise ValueError("Learning rate must be greater than zero!")
         
-        if type(batch_size) is not float:
-            raise TypeError("Batch size must be either a float.")
+        if type(batch_size) is not int:
+            raise TypeError("Batch size must be an integer.")
         if batch_size <= 0:
             raise ValueError("Batch size must be greater than 0!")
         
