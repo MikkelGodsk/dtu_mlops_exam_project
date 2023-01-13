@@ -22,7 +22,7 @@ if __name__ == "__main__":
     wandb.watch(model, log_freq=100)
 
     trainset = Dataset.load_from_disk("data/processed/train")
-    testset = Dataset.load_from_disk("data/processed/train")
+    testset = Dataset.load_from_disk("data/processed/test")
     trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=8)
     testloader = DataLoader(testset, batch_size=batch_size, num_workers=8)
 
