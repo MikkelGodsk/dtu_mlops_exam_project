@@ -25,7 +25,7 @@ def test_model_output():
     assert isinstance(output[0], str)
 
 
-def test_training_step():
+def test_steps():
     batch = {
         "translation": {
             "en": ["The house is wonderful", "I am hungry"],
@@ -34,6 +34,14 @@ def test_training_step():
     }
     model = Model()
     loss = model.training_step(batch)
+    assert isinstance(loss.item(), float)
+    assert isinstance(loss, torch.Tensor)
+
+    loss = model.validation_step(batch)
+    assert isinstance(loss.item(), float)
+    assert isinstance(loss, torch.Tensor)
+
+    loss = model.test_step(batch)
     assert isinstance(loss.item(), float)
     assert isinstance(loss, torch.Tensor)
 
@@ -56,7 +64,7 @@ def test_training_loop():
     # train model one step in lightning
     trainer = Trainer(
         enable_progress_bar=False, enable_checkpointing=False, max_epochs=1
-    )
+    ) # TODO: Overfit to.
     trainer.fit(model, ds)
 
     new_params = deepcopy(model.state_dict())

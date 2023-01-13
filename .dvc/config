@@ -1,4 +1,6 @@
 [core]
-    remote = remote_storage
+    remote = 30k-bucket
 ['remote "remote_storage"']
     url = gs://wmt19-de-en/
+['remote "30k-bucket"']
+    url = gs://30k-dataset

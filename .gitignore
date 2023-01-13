@@ -76,7 +76,9 @@ target/
 .ipynb_checkpoints/
 
 # exclude data from source control by default
-/data/
+/data/json
+/data/wmt19
+/data/*.lock
 /models
 
 # Mac OS-specific storage files
@@ -88,10 +90,6 @@ target/
 
 # Mypy cache
 .mypy_cache/
-/data
-
-# Excluding Felix' virtual environment
-/02476_venv/
 
 # Excluding Felix' virtual environment
 /02476_venv/
