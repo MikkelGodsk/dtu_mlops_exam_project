@@ -47,20 +47,14 @@ be installed with `pip install click markdown`.
 ### Question 1
 > **Enter the group number you signed up on <learn.inside.dtu.dk>**
 >
-> Answer: 41
-
---- question 1 fill here ---
+> Answer:
+41
 
 ### Question 2
 > **Enter the study number for each member in the group**
 >
-> Example:
->
-> *s183319, ss194345, s185231, s184399, s194333*
->
 > Answer:
-
---- question 2 fill here ---
+s183319, ss194345, s185231, s184399, s194333
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -73,7 +67,6 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 3 fill here ---
 
 ## Coding environment
 
@@ -92,12 +85,11 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 4 fill here ---
+
 
 ### Question 5
 
-> **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your**
-> **code. Did you fill out every folder or only a subset?**
+> **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your code. Did you fill out every folder or only a subset?**
 >
 > Answer length: 100-200 words
 >
@@ -107,7 +99,8 @@ be installed with `pip install click markdown`.
 > *experiments.*
 > Answer:
 
---- question 5 fill here ---
+The overall structure is initialized with the cookiecutter template. We have added a folder for conducting different tests. Since the data is handled by google drive via dvc the data folder is removed. In general we tried to as much as possible to follow the cookiecutter structure. 
+
 
 ### Question 6
 
@@ -131,7 +124,10 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 7 fill here ---
+In this project 5 different tests is conducted before merging with the main branch on github. The tests concern the dataset as well as the model. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When we check the model we conducts a list of different tests
+- Is the model in torch
+- Does the model outputs a list containing a string 
+
 
 ### Question 8
 
@@ -161,7 +157,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scrits. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly. 
 
 ### Question 10
 
@@ -176,7 +172,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 10 fill here ---
+The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in google cloud and used the dvc package to manage this. However we did not have enough credit to sustain this service hence we the dvc to google drive. Hereby data controll proved to be very usefull since this update on all our devices was easily made with a simple terminal commands.
 
 ### Question 11
 
@@ -290,7 +286,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
---- question 17 fill here ---
+We used GCP buckets for initally storring the data. However we quickly ran out of credits and hence decided to switch to google drive for data storage instead.
 
 ### Question 18
 

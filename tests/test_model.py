@@ -36,14 +36,17 @@ def test_steps():
     loss = model.training_step(batch)
     assert isinstance(loss.item(), float)
     assert isinstance(loss, torch.Tensor)
+    assert not torch.any(torch.isnan(loss)).item()
 
     loss = model.validation_step(batch)
     assert isinstance(loss.item(), float)
     assert isinstance(loss, torch.Tensor)
+    assert not torch.any(torch.isnan(loss)).item()
 
     loss = model.test_step(batch)
     assert isinstance(loss.item(), float)
     assert isinstance(loss, torch.Tensor)
+    assert not torch.any(torch.isnan(loss)).item()
 
 
 def test_training_loop():
