@@ -124,7 +124,10 @@ The overall structure is initialized with the cookiecutter template. We have add
 >
 > Answer:
 
---- question 7 fill here ---
+In this project 5 different tests is conducted before merging with the main branch on github. The tests concern the dataset as well as the model. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When we check the model we conducts a list of different tests
+- Is the model in torch
+- Does the model outputs a list containing a string 
+
 
 ### Question 8
 
@@ -283,7 +286,7 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 >
 > Answer:
 
---- question 17 fill here ---
+We used GCP buckets for initally storring the data. However we quickly ran out of credits and hence decided to switch to google drive for data storage instead.
 
 ### Question 18
 
