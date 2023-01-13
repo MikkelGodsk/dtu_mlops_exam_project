@@ -7,8 +7,6 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 from src.models import _MODEL_PATH
 
-DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
-
 
 class Model(pl.LightningModule):
     def __init__(self, lr=1e-3, batch_size=1, *args, **kwargs):
@@ -21,8 +19,7 @@ class Model(pl.LightningModule):
         self.t5_model = T5ForConditionalGeneration.from_pretrained(
             "t5-small", cache_dir=_MODEL_PATH
         )
-
-        self.t5_model.to(DEVICE)
+        self.add_module("t5",self.t5_model)
         self.lr = lr
         self.batch_size = batch_size
 
@@ -33,9 +30,7 @@ class Model(pl.LightningModule):
 
         input_ids = self.tokenizer(
             x, return_tensors="pt", padding=True, truncation=True, max_length=128
-        ).input_ids.to(
-            DEVICE
-        )  # Batch size 1
+        ).input_ids.to(self.t5_model.device)
 
         # forward pass
         outputs = self.t5_model.generate(input_ids=input_ids)
@@ -59,12 +54,12 @@ class Model(pl.LightningModule):
             padding="longest",
             truncation=True,
             max_length=512,
-        )
+        ).to(self.t5_model.device)
         target_encoding = self.tokenizer(
             labels, return_tensors="pt", padding=True, truncation=True, max_length=128
-        ).input_ids.to(DEVICE)
-        input_ids = encoding["input_ids"].to(DEVICE)
-        attention_mask = encoding["attention_mask"].to(DEVICE)
+        ).input_ids.to(self.t5_model.device)
+        input_ids = encoding["input_ids"]
+        attention_mask = encoding["attention_mask"]
         loss = self.t5_model(
             input_ids=input_ids, attention_mask=attention_mask, labels=target_encoding,
         ).loss
