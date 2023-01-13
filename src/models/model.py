@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional
+import warnings
 
 import pytorch_lightning as pl
 import sentencepiece  # To ensure it is found by pipreqs
@@ -11,11 +12,52 @@ DEVICE = "cpu" if not torch.cuda.is_available() else "cuda"
 
 
 class Model(pl.LightningModule):
-    def __init__(self, lr=1e-3, batch_size=1, *args, **kwargs):
+    def __init__(
+        self, lr : Optional[float] =1e-3, batch_size : Optional[int] = 1, *args, **kwargs
+        ) -> None:
         """
-            Models are obtained using the code from https://huggingface.co/docs/transformers/model_doc/t5
+        Models are obtained using the code from:
+            https://huggingface.co/docs/transformers/model_doc/t5
+        Model and tokenizer are loaded from pretrained, per the above link.
+        Then model is sat to relevant device ('cuda' if available) and it
+        is assigned learning rate and batch size based on input parameters.
+        
+        Parameters
+        ----------
+        lr : [float integer], optional
+            Learning rate for the training of this model. Must be a positive value!
+        
+        batch_size : [integer, float], optional
+            Batch size for when training this model. Must be strictly greater than 0.
+            (Any batch size of type float will be cast to integer!)
+        
+        Raises
+        ------
+        TypeError
+            If the learning rate is either not an integer nor a float.
+        ValueError
+            If the learning rate isn't positive.
+        TypeError
+            If the batch size is either not an integer nor a float.
+        ValueError
+            If the batch size is less than or equal to zero.
         """
+        
         super().__init__(*args, **kwargs)
+        
+        if type(lr) is not float and type(lr) is not int:
+            raise TypeError("Learning rate must be either an integer or a float.")
+        if lr < 0:
+            raise ValueError("Learning rate must be positive!")
+        
+        if type(batch_size) is not int or type(batch_size) is not float:
+            raise TypeError("Batch size must be either an integer or float.")
+        if type(batch_size) is float:
+            batch_size = int(batch_size)
+            warnings.warn("Batch size was cast to an integer!", RuntimeWarning)
+        if batch_size <= 0:
+            raise ValueError("Batch size must be greater than 0!")
+        
         self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
 
         self.t5_model = T5ForConditionalGeneration.from_pretrained(
