@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 import pytorch_lightning as pl
 import sentencepiece  # To ensure it is found by pipreqs
@@ -26,6 +26,7 @@ class Model(pl.LightningModule):
         self.lr = lr
         self.batch_size = batch_size
 
+
     def forward(self, x: List[str]) -> List[str]:
         """
             https://huggingface.co/docs/transformers/model_doc/t5#inference
@@ -44,6 +45,7 @@ class Model(pl.LightningModule):
             self.tokenizer.decode(output, skip_special_tokens=True)
             for output in outputs
         ]
+
 
     def _inference_training(
         self, batch: Dict[str, Dict[str, List[str]]], batch_idx: Optional[int] = None
@@ -70,6 +72,7 @@ class Model(pl.LightningModule):
         ).loss
         return loss
 
+
     def training_step(
         self, batch: List[str], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
@@ -77,6 +80,7 @@ class Model(pl.LightningModule):
         self.log("train loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
         return loss
+
 
     def validation_step(
         self, batch: List[str], batch_idx: Optional[int] = None
@@ -86,6 +90,7 @@ class Model(pl.LightningModule):
         # TODO: Add metrics
         return loss
 
+
     def test_step(
         self, batch: List[str], batch_idx: Optional[int] = None
     ) -> torch.Tensor:
@@ -93,6 +98,7 @@ class Model(pl.LightningModule):
         self.log("test loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
         return loss
+
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
         return torch.optim.Adam(self.t5_model.parameters(), lr=self.lr)

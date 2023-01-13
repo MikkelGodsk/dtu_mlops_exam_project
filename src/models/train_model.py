@@ -1,8 +1,8 @@
 import pytorch_lightning as pl
 import wandb
+from datasets import Dataset
 from torch.utils.data import DataLoader
 
-from datasets import Dataset
 from src.models import _DATA_PATH
 from src.models.model import Model
 
