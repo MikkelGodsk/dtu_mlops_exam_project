@@ -31,12 +31,16 @@ def main(cache_dir : str, k : Optional[int] = None) -> None:
         If the cache_dir isn't a string.
     TypeError
         If k isn't an integer.
+    ValueError
+        If k is a negative integerr
     """
     
     if type(cache_dir) is not str:
         raise TypeError("cache_dir must be a string denoting the path to the data location.")
     if k is not None and type(k) is not int:
         raise TypeError("k must denote the amount (in an integer) of datapoints to include.")
+    if k <= 0:
+        raise ValueError("k must be a positive amount of datapoints.")
     
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
