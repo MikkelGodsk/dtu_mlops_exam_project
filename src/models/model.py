@@ -131,6 +131,7 @@ class Model(pl.LightningModule):
         loss = self._inference_training(batch, batch_idx)
         self.log("test loss", loss, batch_size=self.batch_size)
         # TODO: Add metrics
+
         return loss
 
 
