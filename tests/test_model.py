@@ -5,6 +5,7 @@ import torch
 from pytorch_lightning import Trainer
 import datasets
 from tqdm import tqdm
+import numpy as np
 
 from src.models.model import Model
 
@@ -53,6 +54,7 @@ def test_training_loop():
     """
         Runs a training loop and checks if the weights change.
     """
+    torch.manual_seed(42)
     batch = {
         "translation": {
             "en": ["The house is wonderful", "I am hungry"],
@@ -60,16 +62,21 @@ def test_training_loop():
         }
     }
     ds = datasets.Dataset.from_list([batch])
-
-    model = Model()
+    model = Model(lr=1e-3)
     old_params = deepcopy(model.state_dict())
 
-    # train model one step in lightning
+    # Overfit model in Pytorch Lightning
     trainer = Trainer(
-        enable_progress_bar=False, enable_checkpointing=False, max_epochs=1
-    ) # TODO: Overfit to.
+        enable_progress_bar=True, 
+        enable_checkpointing=False, 
+        max_epochs=40, 
+        overfit_batches=1,
+        log_every_n_steps=1,
+    )
     trainer.fit(model, ds)
+    assert trainer.logged_metrics['train loss'].item() < 0.1
 
     new_params = deepcopy(model.state_dict())
     for k in tqdm(old_params.keys()):
         assert torch.any(old_params[k] != new_params[k]).item()
+
