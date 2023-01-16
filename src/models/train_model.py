@@ -9,7 +9,7 @@ from src.models import _DATA_PATH
 from src.models.model import Model
 
 if __name__ == "__main__":
-
+    #wandb.login(key="") # input API key for wandb for docker
     wandb.init(
         project="mlops_exam_project",
         entity="chrillebon",
