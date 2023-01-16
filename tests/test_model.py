@@ -34,9 +34,9 @@ def test_steps():
     }
     model = Model()
     loss = model.training_step(batch)
-    assert isinstance(loss.item(), float)
-    assert isinstance(loss, torch.Tensor)
-    assert not torch.any(torch.isnan(loss)).item()
+    assert isinstance(loss.item(), float) # loss is given as a float
+    assert isinstance(loss, torch.Tensor) # loss is a torch tensor
+    assert not torch.any(torch.isnan(loss)).item() # loss is not nan
 
     loss = model.validation_step(batch)
     assert isinstance(loss.item(), float)

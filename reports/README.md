@@ -67,6 +67,7 @@ s183319, ss194345, s185231, s184399, s194333
 >
 > Answer:
 
+In this project we utilized pytorch and pytorch lightening. 
 
 ## Coding environment
 
@@ -124,10 +125,11 @@ The overall structure is initialized with the cookiecutter template. We have add
 >
 > Answer:
 
-In this project 5 different tests is conducted before merging with the main branch on github. The tests concern the dataset as well as the model. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When we check the model we conducts a list of different tests
-- Is the model in torch
-- Does the model outputs a list containing a string 
-
+In this project the code is tested on 5 different areas. The tests are conducted before merging with the main branch on github. The tests concern the dataset as well as the model. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When testing the model the following things must be satisfied
+- The model is in torch
+- The model outputs the translated sentence as a list containing a string
+- In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
+- The weights change during training
 
 ### Question 8
 
@@ -310,7 +312,11 @@ We used GCP buckets for initally storring the data. However we quickly ran out o
 >
 > Answer:
 
---- question 19 fill here ---
+The bucket can be seen in the following 
+```markdown
+![my_image](figures/cloud_bucket.png)
+```
+Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refers to the smaller dataset.
 
 ### Question 20
 
