@@ -74,9 +74,9 @@ def test_training_loop():
         log_every_n_steps=1,
     )
     trainer.fit(model, ds)
-    print(trainer.logged_metrics['train loss'].item())
     assert trainer.logged_metrics['train loss'].item() < 0.1
 
     new_params = deepcopy(model.state_dict())
     for k in tqdm(old_params.keys()):
         assert torch.any(old_params[k] != new_params[k]).item()
+
