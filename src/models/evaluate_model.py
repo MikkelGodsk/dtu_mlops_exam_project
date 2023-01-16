@@ -2,12 +2,14 @@ import pytorch_lightning as pl
 import wandb
 from torch.utils.data import DataLoader
 from torchmetrics import BLEUScore
+import torch
+from pytorch_lightning.callbacks import ModelCheckpoint
 
 from datasets import Dataset
 from src.models import _DATA_PATH
 from src.models.model import Model
 
-if _name_ == "_main_":
+if __name__ == "__main__":
 
     #wandb.init(
     #    project="mlops_exam_project",
@@ -15,19 +17,25 @@ if _name_ == "_main_":
     #    config="src/models/config/default_params.yaml",
     #)
 
-    model = pl.load_from_checkpoint(
-    checkpoint_path="/path/to/pytorch_checkpoint.ckpt", # to do...
-    hparams_file="src/models/config/default_params.yaml",
-    map_location=None,
-)
-    #wandb.watch(model, log_freq=100)
+    model = Model.load_from_checkpoint(
+        checkpoint_path="models/epoch=1-step=3750.ckpt", 
+        )
 
     testset = Dataset.load_from_disk("data/processed/validation")
     testloader = DataLoader(testset, num_workers=8)
-    trainer = pl.Trainer()  # , logger=pl.loggers.WandbLogger(project="mnist"), log_every_n_steps = 1
 
-    results = trainer.test(model=model, datamodule=testloader, verbose=True)
-    print("Done!")
 
-    metric = BLEUScore()
-    metric(results, testset) # to be determined...
+    epochs = 1
+
+    checkpoint_callback = ModelCheckpoint(dirpath = "models/")
+
+    if torch.cuda.is_available():
+        trainer = pl.Trainer(
+        max_epochs=epochs, default_root_dir="", callbacks = [checkpoint_callback], accelerator='gpu', devices = [6], strategy="ddp") 
+    else:
+        trainer = pl.Trainer(
+            max_epochs=epochs, default_root_dir="", callbacks = [checkpoint_callback])
+
+    results = trainer.test(model=model, dataloaders=testloader, verbose=True)
+    
+    print(results)
