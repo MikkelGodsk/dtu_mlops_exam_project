@@ -2,6 +2,8 @@ import pytorch_lightning as pl
 import wandb
 from datasets import Dataset
 from torch.utils.data import DataLoader
+import torch
+from pytorch_lightning.callbacks import ModelCheckpoint
 
 from src.models import _DATA_PATH
 from src.models.model import Model
@@ -26,8 +28,14 @@ if __name__ == "__main__":
     trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=8)
     testloader = DataLoader(testset, batch_size=batch_size, num_workers=8)
 
-    trainer = pl.Trainer(
-        max_epochs=epochs, default_root_dir="")#, accelerator='gpu', devices = [6], strategy="ddp") 
+    checkpoint_callback = ModelCheckpoint(dirpath = "models/")
+
+    if torch.cuda.is_available():
+        trainer = pl.Trainer(
+        max_epochs=epochs, default_root_dir="", callbacks = [checkpoint_callback], accelerator='gpu', devices = [6], strategy="ddp") 
+    else:
+        trainer = pl.Trainer(
+            max_epochs=epochs, default_root_dir="", callbacks = [checkpoint_callback])
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
 
