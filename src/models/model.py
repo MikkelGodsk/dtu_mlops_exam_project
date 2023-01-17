@@ -1,8 +1,6 @@
 from typing import Dict, List, Optional
-import warnings
 
 import pytorch_lightning as pl
-import sentencepiece  # To ensure it is found by pipreqs
 import torch
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
@@ -19,16 +17,16 @@ class Model(pl.LightningModule):
         Model and tokenizer are loaded from pretrained, per the above link.
         Then model is sat to relevant device ('cuda' if available) and it
         is assigned learning rate and batch size based on input parameters.
-        
+
         Parameters
         ----------
         lr : [float integer], optional
             Learning rate for the training of this model. Must be a positive value!
-        
+
         batch_size : [integer, float], optional
             Batch size for when training this model. Must be strictly greater than 0.
             (Any batch size of type float will be cast to integer!)
-        
+
         Raises
         ------
         TypeError
@@ -52,8 +50,10 @@ class Model(pl.LightningModule):
             raise TypeError("Batch size must be an integer.")
         if batch_size <= 0:
             raise ValueError("Batch size must be greater than 0!")
-        
-        self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH, model_max_length=512)
+
+        self.tokenizer = T5Tokenizer.from_pretrained(
+            "t5-small", cache_dir=_MODEL_PATH, model_max_length=512
+        )
 
         self.t5_model = T5ForConditionalGeneration.from_pretrained(
             "t5-small", cache_dir=_MODEL_PATH

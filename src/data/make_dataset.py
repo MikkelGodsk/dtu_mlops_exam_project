@@ -38,7 +38,7 @@ def main(cache_dir: str, k: Optional[int] = None) -> None:
         raise TypeError("cache_dir must be a string denoting the path to the data location.")
     if k is not None and type(k) is not int:
         raise TypeError("k must denote the amount (in an integer) of datapoints to include.")
-    if k <= 0:
+    if k is not None and k <= 0:
         raise ValueError("k must be a positive amount of datapoints.")
 
     logger = logging.getLogger(__name__)
@@ -47,11 +47,11 @@ def main(cache_dir: str, k: Optional[int] = None) -> None:
     dataset = load_dataset('wmt19', 'de-en', cache_dir=cache_dir)
 
     if k is None:
-        traindata = Dataset.from_dict(dataset["train"])
-        valdata = Dataset.from_dict(dataset["validation"])
+        traindata: Dataset = Dataset.from_dict(dataset["train"])
+        valdata: Dataset = Dataset.from_dict(dataset["validation"])
     else:
-        traindata = Dataset.from_dict(dataset["train"][:k])
-        valdata = Dataset.from_dict(dataset["validation"][:k])
+        traindata: Dataset = Dataset.from_dict(dataset["train"][:k])
+        valdata: Dataset = Dataset.from_dict(dataset["validation"][:k])
 
     traindata.save_to_disk(os.path.join(cache_dir, "processed", "train"))
     valdata.save_to_disk(os.path.join(cache_dir, "processed", "val"))

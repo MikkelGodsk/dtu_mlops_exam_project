@@ -5,7 +5,6 @@ from torch.utils.data import DataLoader
 import torch
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from src.models import _DATA_PATH
 from src.models.model import Model
 
 if __name__ == "__main__":
