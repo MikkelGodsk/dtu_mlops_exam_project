@@ -12,19 +12,19 @@ from dotenv import find_dotenv, load_dotenv
 @click.command()
 @click.argument('cache_dir', type=click.Path(exists=True))
 @click.argument('k', type=int)
-def main(cache_dir : str, k : Optional[int] = None) -> None:
+def main(cache_dir: str, k: Optional[int] = None) -> None:
     """
     Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
-    
+
     Parameters
     ----------
     cache_dir : str, required
         A path to where the data is located.
-    
+
     k : integer, optional
         The amount of datapoints to include from the the dataset.
-    
+
     Raises
     ------
     TypeError
@@ -34,26 +34,25 @@ def main(cache_dir : str, k : Optional[int] = None) -> None:
     ValueError
         If k is a negative integerr
     """
-    
     if type(cache_dir) is not str:
         raise TypeError("cache_dir must be a string denoting the path to the data location.")
     if k is not None and type(k) is not int:
         raise TypeError("k must denote the amount (in an integer) of datapoints to include.")
     if k <= 0:
         raise ValueError("k must be a positive amount of datapoints.")
-    
+
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 
     dataset = load_dataset('wmt19', 'de-en', cache_dir=cache_dir)
-    
+
     if k is None:
         traindata = Dataset.from_dict(dataset["train"])
         valdata = Dataset.from_dict(dataset["validation"])
-    else: 
+    else:
         traindata = Dataset.from_dict(dataset["train"][:k])
         valdata = Dataset.from_dict(dataset["validation"][:k])
-    
+
     traindata.save_to_disk(os.path.join(cache_dir, "processed", "train"))
     valdata.save_to_disk(os.path.join(cache_dir, "processed", "val"))
 
