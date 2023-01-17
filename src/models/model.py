@@ -52,8 +52,8 @@ class Model(pl.LightningModule):
             raise TypeError("Batch size must be an integer.")
         if batch_size <= 0:
             raise ValueError("Batch size must be greater than 0!")
-
-        self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH)
+        
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-small", cache_dir=_MODEL_PATH, model_max_length=512)
 
         self.t5_model = T5ForConditionalGeneration.from_pretrained(
             "t5-small", cache_dir=_MODEL_PATH
@@ -72,7 +72,7 @@ class Model(pl.LightningModule):
         ).input_ids.to(self.t5_model.device)
 
         # forward pass
-        outputs = self.t5_model.generate(input_ids=input_ids)
+        outputs = self.t5_model.generate(input_ids=input_ids, max_new_tokens=20)
 
         return [
             self.tokenizer.decode(output, skip_special_tokens=True)
