@@ -3,7 +3,6 @@ import torch
 from src.models.model import Model
 from typing import Union, Optional
 from fastapi import FastAPI
-from fastapi import UploadFile, File
 
 app = FastAPI()
 
@@ -30,7 +29,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, help="English string to be translated")
     parser.add_argument(
-        "--checkpoint", default="models/epoch=0-step=1875-v1.ckpt", type=str, help="Path to checkpoint"
+        "--checkpoint", default=None, type=str, help="Path to checkpoint"
     )
     args = parser.parse_args()
     input = args.input
