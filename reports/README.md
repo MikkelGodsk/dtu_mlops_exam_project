@@ -347,7 +347,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 > *For deployment we wrapped our model into application using ... . We first tried locally serving the model, which*
 > *worked. Afterwards we deployed it in the cloud, using ... . To invoke the service an user would call*
 > *`curl -X POST -F "file=@file.json"<weburl>`*
->
+> 
 > Answer:
 
 --- question 22 fill here ---
