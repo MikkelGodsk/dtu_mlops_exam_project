@@ -22,7 +22,7 @@ def translate(
             checkpoint_path=checkpoint, map_location=DEVICE, strict=strict,
         )
 
-    return model(input)
+    return {'en': input, 'de translation': model(input)[0]}
 
 
 if __name__ == "__main__":
