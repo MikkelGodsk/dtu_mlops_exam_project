@@ -212,12 +212,12 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 > Answer length: 200-300 words.
 >
 > Example:
-> *We have organized our CI into 3 separate files: one for doing ..., one for running ... testing and one for running*
+> *We have organized our continues integration into 3 separate files: one for doing ..., one for running ... testing and one for running*
 > *... . In particular for our ..., we used ... .An example of a triggered workflow can be seen here: <weblink>*
 >
 > Answer:
 
-We only test on the Ubuntu operating system and the python version 3.8, 
+We have organized our CI into 3 separate files: one for doing unittesting, one for running isort testing and one for running flake8. The isort and flake8 test is only run on the Ubuntu operating system and the python version 3.8, the unittesting is also run on the windows operating system and python version 3.10. 
 
 ## Running code and tracking experiments
 
