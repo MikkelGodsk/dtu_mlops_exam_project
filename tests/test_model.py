@@ -11,7 +11,7 @@ from src.models.model import Model
 def test_model_is_torch():
     model = Model()
     assert isinstance(
-        next(iter(model.t5_model.parameters())), torch.Tensor
+        next(iter(model.t5.parameters())), torch.Tensor
     )  # To ensure that it runs in torch.
 
 
