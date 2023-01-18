@@ -9,6 +9,13 @@ RUN apt update && \
 # Copy the essential files from our folder to docker container.
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
+COPY data.dvc data.dvc
+
+RUN pip install dvc 'dvc[gs]'
+RUN dvc init --no-scm
+RUN dvc remote add -d myremote gs://30k-dataset/
+RUN dvc pull
+
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
