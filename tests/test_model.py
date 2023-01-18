@@ -1,11 +1,9 @@
 from copy import deepcopy
 
-import pytest
 import torch
 from pytorch_lightning import Trainer
 import datasets
 from tqdm import tqdm
-import numpy as np
 
 from src.models.model import Model
 
@@ -35,9 +33,9 @@ def test_steps():
     }
     model = Model()
     loss = model.training_step(batch)
-    assert isinstance(loss.item(), float) # loss is given as a float
-    assert isinstance(loss, torch.Tensor) # loss is a torch tensor
-    assert not torch.any(torch.isnan(loss)).item() # loss is not nan
+    assert isinstance(loss.item(), float)  # loss is given as a float
+    assert isinstance(loss, torch.Tensor)  # loss is a torch tensor
+    assert not torch.any(torch.isnan(loss)).item()  # loss is not nan
 
     loss = model.validation_step(batch)
     assert isinstance(loss.item(), float)
@@ -67,16 +65,15 @@ def test_training_loop():
 
     # Overfit model in Pytorch Lightning
     trainer = Trainer(
-        enable_progress_bar=True, 
-        enable_checkpointing=False, 
-        max_epochs=40, 
+        enable_progress_bar=True,
+        enable_checkpointing=False,
+        max_epochs=40,
         overfit_batches=1,
         log_every_n_steps=1,
     )
     trainer.fit(model, ds)
-    assert trainer.logged_metrics['train loss'].item() < 0.1
+    assert trainer.logged_metrics["train loss"].item() < 0.1
 
     new_params = deepcopy(model.state_dict())
     for k in tqdm(old_params.keys()):
         assert torch.any(old_params[k] != new_params[k]).item()
-

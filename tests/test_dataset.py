@@ -23,4 +23,3 @@ def test_dataset_format():
     assert set(X_test["translation"].keys()) == {"en", "de"}
     assert isinstance(X_test["translation"]["en"][0], str)
     assert isinstance(X_test["translation"]["de"][0], str)
-
