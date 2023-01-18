@@ -10,7 +10,7 @@ app = FastAPI()
 @app.get("/translate/{input}")
 def translate(
     input: str = "Hello world",
-    checkpoint: Optional[str] = "models/epoch=0-step=1875-v1.ckpt"
+    checkpoint: Optional[str] = None #"models/epoch=0-step=1875-v1.ckpt"
 ):
     DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
     strict = True if torch.cuda.is_available() else False
