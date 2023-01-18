@@ -48,12 +48,14 @@ be installed with `pip install click markdown`.
 > **Enter the group number you signed up on <learn.inside.dtu.dk>**
 >
 > Answer:
+
 41
 
 ### Question 2
 > **Enter the study number for each member in the group**
 >
 > Answer:
+
 s183319, ss194345, s185231, s184399, s194333
 
 ### Question 3
@@ -67,7 +69,7 @@ s183319, ss194345, s185231, s184399, s194333
 >
 > Answer:
 
-In this project we utilized pytorch and pytorch lightening. 
+In this project we utilized the <a target="_blank" href="https://github.com/huggingface/transformers">Transformers</a> repository from the Huggingface group. This repository provides the <a target="_blank" href="https://huggingface.co/t5-small">t5-small model</a>, which is a language model that can translate text from one language to another. In this project we have used the Trainer class in the pytorch lightening framework to train and test the t5-small model on a subset of the en-de subset of the <a target="_blank" href="https://huggingface.co/datasets/wmt19"> WMT19 dataset</a>. We have used Weights and biases to both handle the configuration file with the hyperparameters for the model and for logging the training.
 
 ## Coding environment
 
@@ -86,6 +88,8 @@ In this project we utilized pytorch and pytorch lightening.
 >
 > Answer:
 
+We have created a requirements file with all the packages needed to be able to run the code for this project. The packages will be install by calling 'pip install -r requirements.txt'. 
+
 
 
 ### Question 5
@@ -100,7 +104,8 @@ In this project we utilized pytorch and pytorch lightening.
 > *experiments.*
 > Answer:
 
-The overall structure is initialized with the cookiecutter template. We have added a folder for conducting different tests. Since the data is handled by google drive via dvc the data folder is removed. In general we tried to as much as possible to follow the cookiecutter structure. 
+The overall structure is initialized with the cookiecutter template. In general we tried to as much as possible to follow the cookiecutter structure. Since the original WMT19 dataset took up to much memory in both cloud and drive, we processed the data locally and only included a subset in the proccessed folder in the data folder. Thus we deleted the data/external, data/interim and data/raw folders. We also deleted the folders notebooks, references, src/features, src/visualization, since we did not use these. We filled out the src/data folder and the src/models folder in which we also included a file for evaluating the model and a folder config, with the configuration files.
+We also included the tests folder which holds scripts for conducting different pytests.
 
 
 ### Question 6
@@ -112,7 +117,7 @@ The overall structure is initialized with the cookiecutter template. We have add
 >
 > Answer:
 
---- question 6 fill here ---
+In this project we have used typing and written comments when the code is not completly self explanatory. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check that the code is pep8 compliant. Lastly, we used isort to sort our imports.
 
 ## Version control
 
@@ -123,13 +128,9 @@ The overall structure is initialized with the cookiecutter template. We have add
 
 > **How many tests did you implement?**
 >
-> Answer:
+> Answer: 
 
-In this project the code is tested on 5 different areas. The tests are conducted before merging with the main branch on github. The tests concern the dataset as well as the model. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When testing the model the following things must be satisfied
-- The model is in torch
-- The model outputs the translated sentence as a list containing a string
-- In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
-- The weights change during training
+7
 
 ### Question 8
 
@@ -142,9 +143,35 @@ In this project the code is tested on 5 different areas. The tests are conducted
 > *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
 > *code and even if we were then...*
 >
-> Answer:
+> Answer: 
 
---- question 8 fill here ---
+The total code coverage of code is 93%, which includes all our source code.
+
+Name                          Stmts   Miss  Cover   Missing
+-----------------------------------------------------------
+src\__init__.py                   0      0   100%
+src\models\__init__.py            2      0   100%
+src\models\model.py              48      4    92%   45, 47, 49, 51
+src\models\predict_model.py      21      7    67%   21, 29-37
+tests\__init__.py                 5      0   100%
+tests\test_api.py                11      0   100%
+tests\test_dataset.py            18      0   100%
+tests\test_model.py              43      0   100%
+-----------------------------------------------------------
+TOTAL                           148     11    93%
+
+
+The reason for the code coverage less than 100% in the file `model.py` is that we deemed some of the checks in the constructor (`__init__`) too trivial to test. These are just checking for the data type and non-negativity of learning-rate and batch size.
+
+In `predict_model.py`, the reason for the coverage being less than 100% is that we do not test with loading in a checkpoint. Unless we transfered this to GitHub, it would not be able to run in actions. Lastly, we have tested the code run in the `if __name__ == '__main__':`-block, however we had to open a pipe to another cmd using `os.popen` doing so, so the code is simply not counted here.
+
+
+
+The tests are conducted upon pushes and pull-requests to the merge branch.
+Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When testing the model the following things must be satisfied
+- The model is in torch
+- The model outputs the translated sentence as a list containing a string
+- In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
 
 ### Question 9
 
@@ -159,7 +186,7 @@ In this project the code is tested on 5 different areas. The tests are conducted
 >
 > Answer:
 
-Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scrits. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly.
+Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly.
 
 ### Question 10
 
@@ -174,7 +201,7 @@ Yes, we added branch protection on the main branch. Hence we created a personal 
 >
 > Answer:
 
-The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in google cloud and used the dvc package to manage this. However we did not have enough credit to sustain this service hence we the dvc to google drive. Hereby data controll proved to be very usefull since this update on all our devices was easily made with a simple terminal commands.
+The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in google cloud and used dvc to manage this. However we did not have enough credit to sustain this service hence we moved the data to google drive. Hereby data controll proved to be very usefull since this update on all our devices was easily made with a simple terminal commands.
 
 ### Question 11
 
@@ -190,7 +217,7 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 >
 > Answer:
 
---- question 11 fill here ---
+We only test on the Ubuntu operating system and the python version 3.8, 
 
 ## Running code and tracking experiments
 
@@ -209,7 +236,7 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 >
 > Answer:
 
---- question 12 fill here ---
+When training the model the hyperparameters are loaded from the configuration file src/models/config/default_params.yaml. When using the src/models/predict_model.py we use a simple argparser to give the input string to be translated along with the checkpoint file containing the trained model weights.
 
 ### Question 13
 
@@ -350,7 +377,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 > 
 > Answer:
 
---- question 22 fill here ---
+For deployment we wrapped our model into application using FastAPI. 
 
 ### Question 23
 
@@ -365,7 +392,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 >
 > Answer:
 
---- question 23 fill here ---
+We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could measure ... and ... that would inform us about this ... behaviour of our application.
 
 ### Question 24
 
@@ -379,7 +406,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 >
 > Answer:
 
---- question 24 fill here ---
+s194333 did not use any credit for this project, since she managed to use all her credit on the project created for M21.
 
 ## Overall discussion of project
 
@@ -414,7 +441,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 >
 > Answer:
 
---- question 26 fill here ---
+We especially spent a lot of time on trying to train the model on cloud.
 
 ### Question 27
 
