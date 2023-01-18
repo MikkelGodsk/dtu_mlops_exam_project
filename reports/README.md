@@ -159,7 +159,7 @@ In this project the code is tested on 5 different areas. The tests are conducted
 >
 > Answer:
 
-Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scrits. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly. 
+Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scrits. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly...
 
 ### Question 10
 
