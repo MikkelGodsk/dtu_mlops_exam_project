@@ -85,8 +85,17 @@ In this project we utilized pytorch and pytorch lightening.
 > *complete copy of our development enviroment, one would have to run the following commands*
 >
 > Answer:
+The new member would have to run the commands (assuming they have git and Python 3.10 installed):
+```
+git clone https://github.com/MikkelGodsk/dtu_mlops_exam_project.git
+cd dtu_mlops_exam_project
+pip install -r requirements.txt
+dvc pull
+python setup.py install
+```
 
-
+Alternatively, you could import environment.yml:
+`conda env create -n ENVNAME --file environment.yml`
 
 ### Question 5
 
