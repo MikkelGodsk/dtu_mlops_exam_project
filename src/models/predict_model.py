@@ -50,7 +50,7 @@ def translate(
     # Model.load_from_checkpoint(
     # checkpoint_path=checkpoint, map_location=DEVICE,
     # )
-    #model = Model()
+    # model = Model()
     # model.load_state_dict(state_dict)
 
     return {"en": input, "de translation": model(input)[0]}
