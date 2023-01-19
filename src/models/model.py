@@ -55,10 +55,10 @@ class Model(pl.LightningModule):
             "t5-small", cache_dir=_MODEL_PATH, model_max_length=512
         )
 
-        self.t5_model = T5ForConditionalGeneration.from_pretrained(
+        self.t5 = T5ForConditionalGeneration.from_pretrained(
             "t5-small", cache_dir=_MODEL_PATH
         )
-        self.add_module("t5", self.t5_model)
+        self.add_module("t5", self.t5)
         self.lr = lr
         self.batch_size = batch_size
 
@@ -69,10 +69,10 @@ class Model(pl.LightningModule):
 
         input_ids = self.tokenizer(
             x, return_tensors="pt", padding=True, truncation=True, max_length=128
-        ).input_ids.to(self.t5_model.device)
+        ).input_ids.to(self.t5.device)
 
         # forward pass
-        outputs = self.t5_model.generate(input_ids=input_ids, max_new_tokens=20)
+        outputs = self.t5.generate(input_ids=input_ids, max_new_tokens=20)
 
         return [
             self.tokenizer.decode(output, skip_special_tokens=True)
@@ -93,13 +93,13 @@ class Model(pl.LightningModule):
             padding="longest",
             truncation=True,
             max_length=512,
-        ).to(self.t5_model.device)
+        ).to(self.t5.device)
         target_encoding = self.tokenizer(
             labels, return_tensors="pt", padding=True, truncation=True, max_length=128
-        ).input_ids.to(self.t5_model.device)
+        ).input_ids.to(self.t5.device)
         input_ids = encoding["input_ids"]
         attention_mask = encoding["attention_mask"]
-        loss = self.t5_model(
+        loss = self.t5(
             input_ids=input_ids, attention_mask=attention_mask, labels=target_encoding,
         ).loss
         return loss
@@ -130,4 +130,4 @@ class Model(pl.LightningModule):
         return loss
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
-        return torch.optim.Adam(self.t5_model.parameters(), lr=self.lr)
+        return torch.optim.Adam(self.parameters(), lr=self.lr)

@@ -1,8 +1,8 @@
 from copy import deepcopy
 
+import datasets
 import torch
 from pytorch_lightning import Trainer
-import datasets
 from tqdm import tqdm
 
 from src.models.model import Model
@@ -11,7 +11,7 @@ from src.models.model import Model
 def test_model_is_torch():
     model = Model()
     assert isinstance(
-        next(iter(model.t5_model.parameters())), torch.Tensor
+        next(iter(model.t5.parameters())), torch.Tensor
     )  # To ensure that it runs in torch.
 
 
@@ -77,3 +77,17 @@ def test_training_loop():
     new_params = deepcopy(model.state_dict())
     for k in tqdm(old_params.keys()):
         assert torch.any(old_params[k] != new_params[k]).item()
+
+
+def test_predict_model_commandline():
+    import os
+
+    out = os.popen(
+        "python "
+        + os.path.join("src", "models", "predict_model.py")
+        + ' --input="The house is wonderful"'
+    ).read()
+    assert (
+        out
+        == "{'en': 'The house is wonderful', 'de translation': 'Das Haus ist wunderbar.'}\n"
+    )
