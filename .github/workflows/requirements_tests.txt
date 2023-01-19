@@ -1,2 +1,4 @@
 pytest
 httpx
+dvc
+dvc[gs]
