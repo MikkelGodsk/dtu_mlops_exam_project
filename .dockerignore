@@ -1,0 +1,11 @@
+.github
+docs/
+lightning_logs/
+notebooks/
+references/
+reports/
+src.egg-info/
+tests/
+wandb/
+.dvc
+.git
