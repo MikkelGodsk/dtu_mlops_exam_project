@@ -1,0 +1,13 @@
+# local package
+-e .
+
+# external requirements
+click
+pytorch_lightning
+sentencepiece
+fastapi
+protobuf
+dvc
+dvc[gs]
+pydantic
+uvicorn
