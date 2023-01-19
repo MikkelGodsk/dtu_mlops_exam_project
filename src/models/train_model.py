@@ -6,16 +6,30 @@ from torch.utils.data import DataLoader
 import torch
 from pytorch_lightning.callbacks import ModelCheckpoint
 import os
+from typing import Optional
 
 from src.models.model import Model
 
-def train(wandbkey, debug_mode=False):
-    print(wandbkey)
-    wandb.login(key=wandbkey) # input API key for wandb for docker
+
+def train(wandbkey:Optional[str]=None, debug_mode:bool=False):
+    if not (wandbkey is None):
+        wandb.login(key=wandbkey) # input API key for wandb for docker
+        project = "mlops_exam_project"
+        entity = "chrillebon"
+        anonymous=None
+        mode="online"
+    else:
+        project = None
+        entity = None
+        anonymous="must"
+        mode="disabled"
+
     wandb.init(
-        project="mlops_exam_project",
-        entity="chrillebon",
+        project=project,
+        entity=entity,
+        anonymous=anonymous,
         config="src/models/config/default_params.yaml",
+        mode=mode,
     )
 
     lr = wandb.config.lr
@@ -23,7 +37,12 @@ def train(wandbkey, debug_mode=False):
     batch_size = wandb.config.batch_size
 
     model = Model(lr=lr, batch_size=batch_size)
-    wandb.watch(model, log_freq=100)
+    
+    if not (wandbkey is None):
+        wandb.watch(model, log_freq=100)
+        logger = pl.loggers.WandbLogger(project="mlops_exam_project",entity="chrillebon")
+    else:
+        logger = True
 
     trainset = Dataset.load_from_disk("data/processed/train")
     testset = Dataset.load_from_disk("data/processed/validation")
@@ -54,7 +73,7 @@ def train(wandbkey, debug_mode=False):
         limit_train_batches=limit,
         limit_val_batches=limit,
         profiler="simple",
-        logger=pl.loggers.WandbLogger(project="mlops_exam_project",entity="chrillebon")
+        logger=logger
     )
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
@@ -68,7 +87,7 @@ def train(wandbkey, debug_mode=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--wandbkey", type=str, help="W&B API key"
+        "--wandbkey", default=None, type=str, help="W&B API key"
     )
     parser.add_argument(
         "--debug_mode", action='store_true', help="Run only 10 percent of data"

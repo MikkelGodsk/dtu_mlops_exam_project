@@ -81,12 +81,13 @@ train:
 
 ## Build docker image for training.
 build_train_dockerfile:
-	docker build -f trainer.dockerfile . -t traintranslate --build-arg KEY_FILE=$(keyfile)
+	docker build -f trainer.dockerfile . -t traintranslate
 # --build-arg KEY_FILE=$(keyfile)
 
 ## Run docker image for training. Requires wandb key using argument "wandbkey=xxxxxx"
 run_train_dockerfile:
-	docker run --name traincontainer -e WANDBKEY=$(wandbkey) traintranslate
+	docker run --name traincontainer traintranslate
+# -e WANDBKEY=$(wandbkey)
 
 ## Build docker image for predicting translations
 build_predict_dockerfile:
