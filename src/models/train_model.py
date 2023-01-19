@@ -6,8 +6,9 @@ import torch
 import wandb
 from datasets import Dataset
 from pytorch_lightning.callbacks import ModelCheckpoint
-from src.models.model import Model
 from torch.utils.data import DataLoader
+
+from src.models.model import Model
 
 
 def train(config: str, wandbkey: Optional[str] = None, debug_mode: bool = False):

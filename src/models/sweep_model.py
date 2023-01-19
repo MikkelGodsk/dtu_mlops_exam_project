@@ -4,8 +4,9 @@ import pytorch_lightning as pl
 import torch
 import wandb
 from datasets import Dataset
-from src.models.model import Model
 from torch.utils.data import DataLoader
+
+from src.models.model import Model
 
 
 def train(config=None):
