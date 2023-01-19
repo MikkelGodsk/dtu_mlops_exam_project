@@ -2,9 +2,8 @@ from typing import Dict, List, Optional
 
 import pytorch_lightning as pl
 import torch
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-
 from src.models import _MODEL_PATH
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 
 class Model(pl.LightningModule):

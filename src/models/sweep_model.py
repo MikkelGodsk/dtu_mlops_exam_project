@@ -2,11 +2,10 @@ import argparse
 
 import pytorch_lightning as pl
 import torch
-from datasets import Dataset
-from torch.utils.data import DataLoader
-
 import wandb
+from datasets import Dataset
 from src.models.model import Model
+from torch.utils.data import DataLoader
 
 
 def train(config=None):

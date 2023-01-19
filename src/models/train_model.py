@@ -3,12 +3,11 @@ from typing import Optional
 
 import pytorch_lightning as pl
 import torch
+import wandb
 from datasets import Dataset
 from pytorch_lightning.callbacks import ModelCheckpoint
-from torch.utils.data import DataLoader
-
-import wandb
 from src.models.model import Model
+from torch.utils.data import DataLoader
 
 
 def train(config: str, wandbkey: Optional[str] = None, debug_mode: bool = False):

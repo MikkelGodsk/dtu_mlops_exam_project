@@ -5,7 +5,6 @@ from typing import Optional
 import torch
 from fastapi import FastAPI
 from google.cloud import storage
-
 from src.models.model import Model
 
 app = FastAPI()
