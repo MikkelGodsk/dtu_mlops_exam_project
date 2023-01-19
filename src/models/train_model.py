@@ -11,7 +11,7 @@ from typing import Optional
 from src.models.model import Model
 
 
-def train(wandbkey:Optional[str]=None, debug_mode:bool=False):
+def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
     if not (wandbkey is None):
         wandb.login(key=wandbkey) # input API key for wandb for docker
         project = "mlops_exam_project"
@@ -28,13 +28,17 @@ def train(wandbkey:Optional[str]=None, debug_mode:bool=False):
         project=project,
         entity=entity,
         anonymous=anonymous,
-        config="src/models/config/default_params.yaml",
+        config=config,
         mode=mode,
     )
 
     lr = wandb.config.lr
     epochs = wandb.config.epochs
     batch_size = wandb.config.batch_size
+    seed = wandb.config.batch_size
+    
+    if seed is not None:
+        torch.manual_seed(seed)
 
     model = Model(lr=lr, batch_size=batch_size)
     
@@ -87,6 +91,9 @@ def train(wandbkey:Optional[str]=None, debug_mode:bool=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--config", default="src/models/config/default_params.yaml", type=str, help="configuration file with hyperparameters"
+    )
+    parser.add_argument(
         "--wandbkey", default=None, type=str, help="W&B API key"
     )
     parser.add_argument(
@@ -95,4 +102,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     
-    train(args.wandbkey, args.debug_mode)
+    train(args.config, args.wandbkey, args.debug_mode)
