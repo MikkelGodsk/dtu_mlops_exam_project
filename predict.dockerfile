@@ -7,26 +7,24 @@ RUN apt update && \
     apt clean & rm -rf /var/lib/apt/lists/*
 
 # Copy the essential files from our folder to docker container.
-COPY requirements.txt requirements.txt
-COPY setup.py setup.py
-COPY data.dvc data.dvc
-
-RUN pip install dvc 'dvc[gs]'
-RUN dvc init --no-scm
-RUN dvc remote add -d myremote gs://30k-dataset/
-RUN dvc pull
-
 COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 
-# Set working directory as / and install dependencies
-WORKDIR /
+COPY requirements.txt requirements.txt
+COPY setup.py setup.py
+COPY data.dvc data.dvc
 
 RUN pip install -r requirements.txt --no-cache-dir
-
 RUN pip install pydantic
 RUN pip install uvicorn
+
+RUN dvc init --no-scm
+RUN dvc pull
+
+
+# Set working directory as / and install dependencies
+WORKDIR /
 
 RUN mkdir app
 
@@ -34,5 +32,5 @@ RUN mkdir app
 # The -u flag makes it print to console rather than the docker log file.
 #ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]
 CMD exec uvicorn src.models.predict_model:app --host 0.0.0.0 --workers 1 --port $PORT
-
+#ENTRYPOINT ["uvicorn", "src.models.predict_model:app", "--host", "0.0.0.0", "--workers", "1", "--port", $PORT]
 #  
