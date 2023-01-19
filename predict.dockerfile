@@ -22,7 +22,7 @@ RUN pip install -r requirements_predict.txt --no-cache-dir
 
 RUN dvc init --no-scm
 RUN dvc remote add -d gcloud_storage gs://mlops-dataset-small
-RUN dvc pull
+RUN dvc pull gcloud_storage
 
 # Set working directory as / and install dependencies
 WORKDIR /

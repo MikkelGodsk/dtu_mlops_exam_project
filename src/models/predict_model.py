@@ -1,10 +1,21 @@
 import argparse
+import pickle
+import os
+
 import torch
-from src.models.model import Model
 from typing import Union, Optional
 from fastapi import FastAPI
+from google.cloud import storage
+
+from src.models.model import Model
 
 app = FastAPI()
+
+
+def newest_blob(bucket):
+    blobs = list(bucket.list_blobs())
+    sort_fn = lambda blob: str(blob.time_created)
+    return sorted(blobs, key=sort_fn, reverse=True)[0]
 
 
 @app.get("/translate/{input}")
@@ -12,15 +23,25 @@ def translate(
     input: str = "Hello world",
     checkpoint: Optional[str] = None #"models/epoch=0-step=1875-v1.ckpt"
 ):
+    """
+        If a new model is uploaded to the bucket, the function downloads it when invoked.
+    """
     DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
     strict = True if torch.cuda.is_available() else False
 
+    client = storage.Client()
+    bucket = client.get_bucket('model-checkpoints-mlops-exam')
     if checkpoint is None:
-        model = Model()
+        blob = newest_blob(bucket)
     else:
-        model = Model.load_from_checkpoint(
-            checkpoint_path=checkpoint, map_location=DEVICE,
-        )
+        blob = bucket.get_blob(checkpoint)
+    if not os.path.isfile(blob.name):
+        blob.download_to_filename(filename=blob.name)
+    state_dict = torch.load(blob.name)  #pickle.loads(blob.download_as_string())
+    model = Model() #Model.load_from_checkpoint(
+        #checkpoint_path=checkpoint, map_location=DEVICE,
+    #)  # Model()
+    model.load_state_dict(state_dict)
 
     return {'en': input, 'de translation': model(input)[0]}
 

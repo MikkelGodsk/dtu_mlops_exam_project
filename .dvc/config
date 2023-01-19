@@ -1,4 +1,2 @@
-[core]
-    remote = gcloud_storage
 ['remote "gcloud_storage"']
     url = gs://mlops-dataset-small
