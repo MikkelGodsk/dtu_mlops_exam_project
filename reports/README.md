@@ -56,7 +56,7 @@ be installed with `pip install click markdown`.
 >
 > Answer:
 
-s183319, ss194345, s185231, s184399, s194333
+s183319, s194345, s185231, s184399, s194333
 
 ### Question 3
 > **What framework did you choose to work with and did it help you complete the project?**
@@ -235,7 +235,21 @@ We have organized our continues integration into three separate files: one for d
 >
 > Answer:
 
-When training the model the hyperparameters are loaded from the configuration file src/models/config/default_params.yaml. When using the src/models/predict_model.py we use a simple argparser to give the input string to be translated along with the checkpoint file containing the trained model weights.
+When training the model the hyperparameters are loaded from the configuration file src/models/config/default_params.yaml. This files contains the learning rate, number of epochs and the batch size of the model and is loaded into the training script with the following code:
+
+ wandb.init(
+        project="mlops_exam_project",
+        entity="chrillebon",
+        config="src/models/config/default_params.yaml",
+    )
+
+    lr = wandb.config.lr
+    epochs = wandb.config.epochs
+    batch_size = wandb.config.batch_size
+
+In this project we do not experiment a lot with different model configuration files. Hence for simplicity we have included the configuration file directly in the training script rather than giving it as an input.
+
+When using the src/models/predict_model.py we use a simple argparser to give the input string to be translated along with the checkpoint file containing the trained model weights.
 
 ### Question 13
 
@@ -250,7 +264,7 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
---- question 13 fill here ---
+In order to reproduce the experiments we included a seed in the configuration file. 
 
 ### Question 14
 
@@ -267,7 +281,11 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
---- question 14 fill here ---
+In W&B we track the training loss as seen on the figure below.
+
+FIGURE:
+
+This metric is essential for showing whether the model is improving through training. 
 
 ### Question 15
 
@@ -282,7 +300,13 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
-In our project reproducablity is very important, hence we utilize Docker in order to ensure that the application can be run on all devices. Hence we created docker images 
+In our project, reproducablity is very important, hence we utilize Docker in order to ensure that the application can be run on all devices. Hence we created docker images for training and deploying the model. Since building docker images are a time consuming task, we mainly build the dockerimages in cloud using a dockerfile and triggers. After being build the docker images are run using google cloud Run.
+Link are provided in the following:
+<weblink>*
+<weblink>*
+<weblink>*
+
+Remove?!:
 For our project we developed several images: one for training on cpu and one for training on gpu and likewise for inference on cpu and gpu. Furthermore we have devoloped images for deployment on cloud. For example to run the training docker image: `docker run trainer:latest`. Link to docker file: <weblink>*
 
 ### Question 16
@@ -298,8 +322,9 @@ For our project we developed several images: one for training on cpu and one for
 >
 > Answer:
 
-For debugging we used the build in debugger in visual studio code and when this was not enought we used simple print statements.
-We considered saving the tokenized dataset, which would probably speed up the training processes, such that the tokenization is not being done in each training step.
+When locally executing code we used the build in debugger in visual studio code and when this was not enought we used simple print statements. The debugging mode in visual studio is in general quite informative and helpfull when erros occured. When for example building images in google cloud a lot of errors occured. Hence debugging needed to be performed locally before building in cloud.
+
+We did not use any tools for profiling the code, however we are avare that the code might be edible for improvements. For example, we considered saving the tokenized dataset, which would probably speed up the training processes, such that the tokenization is not necessary every time the training function is called.
 
 ## Working in the cloud
 
@@ -316,7 +341,20 @@ We considered saving the tokenized dataset, which would probably speed up the tr
 >
 > Answer:
 
-We used GCP buckets for initally storring the data. However we quickly ran out of credits and hence decided to switch to google drive for data storage instead.
+Buckets:
+We used GCP buckets for initally storeing the data. However we quickly ran out of credits and hence had to create a new bucket containg the same data but with a different billing account. Furthermore we also used buckets for storring checkpoints. 
+
+Build:
+Images are build using cloud build.
+
+Triggers:
+In order to automatically build images triggers are used to connect the github repository to google cloud
+
+Containers:
+Images are stored in containers 
+
+Run:
+Models are deployed using google Run
 
 ### Question 18
 
@@ -409,7 +447,7 @@ We did not manage to implement monitoring. We would like to have monitoring impl
 >
 > Answer:
 
-s194333 did not use any credit for this project, since she managed to use all her credit on the project created for M21.
+s194333 did not use any credit for this project, since she managed to use all her credit on the project created for M21. In total on this project together we used around 5 dollars. Google cloud was not very transparent about billing account or money usage.  
 
 ## Overall discussion of project
 
@@ -426,11 +464,16 @@ s194333 did not use any credit for this project, since she managed to use all he
 > Example:
 >
 > *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
-> *Whenever we commit code and puch to github, it auto triggers ... and ... . From there the diagram shows ...*
+> *Whenever we commit code and push to github, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
 
 ![Graphical reprsentation of architecture](figures/graphical_representation_of_architecture.png)
+The starting point of the diagram is our local pytorch application, which we wrapped in the **pytorch lightning** framework. This served as the inital steps of creating the mlops pipeline. We version-controled our project using **git** via **Github**. A new environment can be initialized using either **Conda** or **pip**. We opted to use `pipreqs` for finding the package requirements of our project, which made for seamless instantiation of the projects *requirements.txt*. We utilized **wandb** in conjunction with **pytorch lightning** for logging the 'experiments'/ training of our *NLP* model. For training configuration **wandb** performed satisfactory, hence **Hydra** was omited from this project. These are the essential parts which are contained into a **docker** container. Locally the project follows the codestructure of **Cookiecutter**. 
+
+In order to utilize the **GPC** git and dvc both provides a link from the local machine. Git furthermore enabled **Github actions** for testing the code before uploading to a remote storage. Using a **trigger** connected to the github repository we created **docker images** in **docker containers** in the cloud. 
+
+When training a dataset stored in a **GCP bucket** was utilized. Information sharing and version control of the dataset was handled by utilizing **dvc**. We interfaced with our application through **Cloud Run** by using the **Fast API** framework. Finally, we didn't utilize monitoring as we had plenty of work on our hands, trying to interface with and getting our model to run on cloud.
 
 ### Question 26
 
@@ -446,7 +489,7 @@ s194333 did not use any credit for this project, since she managed to use all he
 
 Our first time consuming task was to download the data. This was downloaded from huggingface which took a long time. We also spent an excessive amount of time trying to train our model on cloud. Some main factors contributing to this issue, was our funding running short and having to authenticate multiple frameworks within a docker container. s194333 created the project on GCP, however she quickly (within 48 hours) ran short on funding (complementary of the course) due to operations ineracting with the *bucket* storing our data. We aren't entirely certain as to what depleted the grants, however this greatly restricted our work. From docker we needed to authenticate dvc, GCP, in addition to `wandb`. This proved tremendously cumbersome as the authentication requires certfication, which we would preferably avoid storing in the docker image. During this process we spent a lot of time debugging. Due to long building times errors didn't occur immediatly, which resulted in a lot of reapeated idle time. 
 
-In general most of the tools and frameworks were relativly new for us, which resulted in a lot of google searches and unknown errors. The exercises significantly prepared us for conducting the project, however we still had a lot to learn when making the project. This challenged us in many ways, however we managed to overcome these one by one.
+In general most of the tools and frameworks were relativly new for us, which resulted in a lot of google searches and unknown errors. The exercises significantly prepared us for conducting the project, however we still had a lot to learn when making the project. This challenged us in many ways, however we ultimately managed to overcome these.
 
 ### Question 27
 
@@ -462,3 +505,21 @@ In general most of the tools and frameworks were relativly new for us, which res
 > *All members contributed to code by...*
 >
 > Answer:
+
+s183319, s194345, s185231, s184399, s194333
+
+Student s184399 created github repository with the cookiecutter structure. Furthermore the student was in charge of testing the models using unittesting and other previously mentioned tests. Furthermore he also contributed to building the docker images in the cloud and deploying the model. 
+
+Student s185231 was in charge of building the docker images in the cloud. Furthermore the student helped downloading the data and creating the scripts for training and testing the model.
+
+Student s183319 contributed to 
+
+Student...
+
+s194333 was responsible for creating the scripts for training and prediction as well as afterwards training the model. 
+
+ was in charge of building the docker images in cloud
+s194333 and s194345 was in charge of training the models
+
+
+
