@@ -53,7 +53,7 @@ def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
     trainloader = DataLoader(trainset, batch_size=batch_size, num_workers=8)
     testloader = DataLoader(testset, batch_size=batch_size, num_workers=8)
 
-    checkpoint_callback = ModelCheckpoint(dirpath=os.path.join("models","checkpoints"))
+    checkpoint_callback = ModelCheckpoint(dirpath="/models/checkpoints")
 
     if torch.cuda.is_available():
         accelerator = "gpu"
@@ -63,7 +63,7 @@ def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
         devices = None
 
     if debug_mode:
-        limit = 0.01
+        limit = 0.1
     else:
         limit = 1.0
 
@@ -82,10 +82,10 @@ def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
 
-    torch.save(model.state_dict(), "gs://model-checkpoints-mlops-exam/models/epoch=final.ckpt") #os.path.join("models","checkpoints","epoch=final.ckpt"))
+    torch.save(model.state_dict(), "/models/epoch=final.pt")
     print("Done!")
 
-    # Mangler at uploade de gemte filer til drive.
+    # Mangler at uploade de gemte filer til drive. Gøres i docker
 
 
 if __name__ == "__main__":
