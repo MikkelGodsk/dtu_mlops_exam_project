@@ -123,7 +123,7 @@ We also included the tests/ folder which holds scripts for conducting different 
 >
 > Answer:
 
-In this project we have used typing and written comments when the code is not completly self explanatory, in addition to function docstrings. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check. Lastly, we used isort to sort our imports. The code quality and format is tested in github actions, hence constantly ensuring the quality.
+In this project we have used typing and written comments when the code is not completly self explanatory, in addition to function docstrings. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check. Lastly, we used isort to sort our imports. The code quality and format is tested in github actions, hence constantly ensuring the quality. Using these methods makes it much easier to share code and ensures the readability.
 
 ## Version control
 
@@ -154,11 +154,11 @@ In this project we have used typing and written comments when the code is not co
 The total code coverage of code is 93%, which includes all our source code.
 | Name                          | STMTS | Miss | Cover | Missing        |
 |-------------------------------|-------|------|-------|----------------|
-| ./src/\_\_init\_\_.py             | 0     | 0    | 100%  | -              |
-| ./src/models/\_\_init\_\_.py      | 2     | 0    | 100%  | -              |
+| ./src/\_\_init\_\_.py         | 0     | 0    | 100%  | -              |
+| ./src/models/\_\_init\_\_.py  | 2     | 0    | 100%  | -              |
 | ./src/models/model.py         | 48    | 4    | 92%   | 45, 47, 49, 51 |
 | ./src/models/predict_model.py | 21    | 7    | 67%   | 21, 29-37      |
-| ./tests/\_\_init\_\_.py           | 5     | 0    | 100%  | -              |
+| ./tests/\_\_init\_\_.py       | 5     | 0    | 100%  | -              |
 | ./tests/test_api.py           | 11    | 0    | 100%  | -              |
 | ./tests/test_dataset.py       | 18    | 0    | 100%  | -              |
 | ./tests/test_model.py         | 43    | 0    | 100%  | -              |
@@ -166,7 +166,7 @@ The total code coverage of code is 93%, which includes all our source code.
 
 The reason for the code coverage less than 100% in the file `model.py` is that we deemed some of the checks in the constructor (`__init__`) too trivial to test. These are just checking for the data type and non-negativity of learning-rate and batch size.
 
-In `predict_model.py`, the reason for the coverage being less than 100% is that we do not test with loading in a checkpoint. Unless we transfered this to GitHub, it would not be able to run in actions. Lastly, we have tested the code run in the `if __name__ == '__main__':`-block, however we had to open a pipe to another cmd using `os.popen` doing so, so the code is simply not counted here.
+In `predict_model.py`, the reason for the coverage being less than 100% is that we do not test with loading in a checkpoint. Unless we transfered this to GitHub, it would not be able to run in actions. Lastly, we have tested the code run in the `if __name__ == '__main__':`-block. In order to do so we had to open a pipe to another cmd using `os.popen` doing so, so the code is simply not counted here.
 
 ### Question 9
 
@@ -181,7 +181,7 @@ In `predict_model.py`, the reason for the coverage being less than 100% is that 
 >
 > Answer:
 
-We added branch protection on the main branch. Hence we created a personal branch where changes were made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immediately.
+We added branch protection on the main branch. Hence we created a feature branch where changes were made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immediately.
 
 ### Question 10
 
@@ -196,7 +196,7 @@ We added branch protection on the main branch. Hence we created a personal branc
 >
 > Answer:
 
-The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in Google Cloud and used dvc to manage this. However s194333 did not have enough credit to sustain this service hence we has to create another bucket containing the same data with a different billing account. However we also stored the data on google drive, in case we potentially would use all credits on cloud again. Hence data version control proved to be very usefull for switching between different data storage options. In addition, data control was an easy update to implement on all our devices since it only required some simple terminal commands. 
+The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in Google Cloud and used dvc to manage this. However s194333 did not have enough credit to sustain this service hence we had to create another bucket containing the same data with a different billing account. However we also stored the data on google drive, in case we potentially would use all credits on cloud again. Hence the dvc package proved to be very usefull for switching between different data storage options. In addition, dvc was an easy update to implement on all our devices since it only required some simple terminal commands. 
 
 ### Question 11
 
@@ -217,6 +217,9 @@ We have organized our continues integration into three separate files: one for d
 - The model outputs the translated sentence as a list containing a string
 - In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
 
+Link to github actions:
+https://github.com/MikkelGodsk/dtu_mlops_exam_project/actions/runs/3961726045/workflow
+
 
 ## Running code and tracking experiments
 
@@ -235,19 +238,13 @@ We have organized our continues integration into three separate files: one for d
 >
 > Answer:
 
-When training the model the hyperparameters are loaded from the configuration file src/models/config/default_params.yaml. This files contains the learning rate, number of epochs and the batch size of the model and is loaded into the training script with the following code:
+When training the model the hyperparameters are by default loaded from the configuration file src/models/config/default_params.yaml. It is also possible to pass a different path using the argparser. The configuration file contains the learning rate, number of epochs, the batch size of the model and a seed if reproducability is desired. The configuration file is passed to the wandb.init() function and the hyperparameters are loaded into the training script with the following code:
 
- wandb.init(
-        project="mlops_exam_project",
-        entity="chrillebon",
-        config="src/models/config/default_params.yaml",
-    )
+lr = wandb.config.lr
+epochs = wandb.config.epochs
+batch_size = wandb.config.batch_size
 
-    lr = wandb.config.lr
-    epochs = wandb.config.epochs
-    batch_size = wandb.config.batch_size
-
-In this project we do not experiment a lot with different model configuration files. Hence for simplicity we have included the configuration file directly in the training script rather than giving it as an input.
+We utilized the *sweep* functionality of `wandb` in an attempt to optimize hyperparamters. Through `wandb` the hyperparameter configuration was logged. The hyperparameters for the different experiments are then set to the hyperparameters resulting in the best validation loss.
 
 When using the src/models/predict_model.py we use a simple argparser to give the input string to be translated along with the checkpoint file containing the trained model weights.
 
@@ -264,7 +261,7 @@ When using the src/models/predict_model.py we use a simple argparser to give the
 >
 > Answer:
 
-In order to reproduce the experiments we included a seed in the configuration file. 
+ When we load the config file the hyperparameters of the model is set to the values provided in the file. Hence one can easily see which parameters are used to train. However, when conducting experiments it is important to track which parameters are used. By ensuring commits between changes in config file we make sure that experiments are logged in the git commit history. In order to reproduce the experiments we included a seed in the configuration file. Hereby we ensure that the exact same results are obtained when training a model with a specific set of hyperparameters. Furthermore we created docker images, which ensures that our models can be run on all computers. By running multiple experiments in W&B we ensure that hyperparameters are kept in W&B.
 
 ### Question 14
 
@@ -283,9 +280,21 @@ In order to reproduce the experiments we included a seed in the configuration fi
 
 In W&B we track the training loss as seen on the figure below.
 
-FIGURE:
+![Training loss](figures/train_loss.png)
 
-This metric is essential for showing whether the model is improving through training. 
+We see a small descrease of the loss. This metric is essential for showing whether the model is learning from the data during the training. 
+
+We also track the validation loss as seen on the figure below.
+
+![Validation loss](figures/val_loss.png)
+
+The validation loss is very important to monitor the models performance when presented to unknown data. 
+
+We also perform a sweep in an attempt to optimize hyperparamters based on obtaining the lowest possible validation loss.
+
+![Sweep hyperparameters](figures/hyperparams.png)
+
+This did however show us that with the best hyperparameterse the validation loss remains constant.
 
 ### Question 15
 
@@ -297,17 +306,13 @@ This metric is essential for showing whether the model is improving through trai
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
 > *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
->
+> 
 > Answer:
 
-In our project, reproducablity is very important, hence we utilize Docker in order to ensure that the application can be run on all devices. Hence we created docker images for training and deploying the model. Since building docker images are a time consuming task, we mainly build the dockerimages in cloud using a dockerfile and triggers. After being build the docker images are run using google cloud Run.
-Link are provided in the following:
-<weblink>*
-<weblink>*
-<weblink>*
+In our project, reproducablity is very important, hence we utilize Docker in order to ensure that the application can be run on all devices. Hence we created docker images for training and deploying the model. Since building docker images are a time consuming task, we prefred google cloud for building the dockerimages in cloud using a dockerfile and triggers. After being build the docker images are run using google cloud Run.
+A link to the training docker file is provided in the following:
+https://github.com/MikkelGodsk/dtu_mlops_exam_project/blob/main/trainer.dockerfile
 
-Remove?!:
-For our project we developed several images: one for training on cpu and one for training on gpu and likewise for inference on cpu and gpu. Furthermore we have devoloped images for deployment on cloud. For example to run the training docker image: `docker run trainer:latest`. Link to docker file: <weblink>*
 
 ### Question 16
 
@@ -324,7 +329,7 @@ For our project we developed several images: one for training on cpu and one for
 
 When locally executing code we used the build in debugger in visual studio code and when this was not enought we used simple print statements. The debugging mode in visual studio is in general quite informative and helpfull when erros occured. When for example building images in google cloud a lot of errors occured. Hence debugging needed to be performed locally before building in cloud.
 
-We did not use any tools for profiling the code, however we are avare that the code might be edible for improvements. For example, we considered saving the tokenized dataset, which would probably speed up the training processes, such that the tokenization is not necessary every time the training function is called.
+We used the inbuild tool from pytorch lightning for profiling the training, but we did not really do anything to improve the code based on the profilling. However we are avare that the code might be edible for improvements. For example, we considered saving the tokenized dataset, which would probably speed up the training processes, such that the tokenization is not necessary every time the training function is called.
 
 ## Working in the cloud
 
@@ -342,7 +347,7 @@ We did not use any tools for profiling the code, however we are avare that the c
 > Answer:
 
 Buckets:
-We used GCP buckets for initally storeing the data. However we quickly ran out of credits and hence had to create a new bucket containg the same data but with a different billing account. Furthermore we also used buckets for storring checkpoints. 
+We used GCP buckets for initally storing the data. However we quickly ran out of credits and hence had to create a new bucket containg the same data but with a different billing account. Furthermore we also used buckets for storring checkpoints. 
 
 Build:
 Images are build using cloud build.
@@ -355,6 +360,10 @@ Images are stored in containers
 
 Run:
 Models are deployed using google Run
+
+Vertex AI:
+Training framework where we run the docker image
+
 
 ### Question 18
 
@@ -369,7 +378,7 @@ Models are deployed using google Run
 >
 > Answer:
 
---- question 18 fill here ---
+In this project we did not utilize the Compute engine and used Vertex AI instead. 
 
 ### Question 19
 
@@ -391,7 +400,8 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 >
 > Answer:
 
---- question 20 fill here ---
+![GCP Registry](figures/gcp_registry.png)
+
 
 ### Question 21
 
@@ -400,7 +410,7 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 >
 > Answer:
 
---- question 21 fill here ---
+![Build history](figures/build_history_cloud.png)
 
 ### Question 22
 
@@ -416,9 +426,14 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 > 
 > Answer:
 
-We managed to deploy our model in google cloud:
-https://translation-gcp-app-jc4crsqeca-lz.a.run.app/translate/The%20house%20is%20nice.
-For deployment we wrapped our model into application using FastAPI. 
+Deploying the model locally was quite straight forward. Inputs to the model can easily be given through the terminal. However deploying in google cloud caused a lot more complication. For deployment we wrapped our model into an application using FastAPI and used cloud run. We were heavily challenged by the fact that after training the model the checkpoint could not be saved to a bucket on cloud without authentication, which we did not manage to implement. Hence we did not use the finetuned model for deployment directly trough cloud. 
+We did however manage to finetune the model on the hypatia cluster at DTU and uploading a checkpoint to bucket, however we had issues with downloading he checkpoint from within the python code (again due to authentication issues). Given a little more time, it would have been easy to setup DVC such that the model weights would be store alongside the dataset, whence we should have been able to get the finetuned model to deploy.
+
+In the training file, we used distributed data loading and multiple workers implemented through pytorch-lightning.
+
+Link to our model: 
+https://translation-gcp-app-jc4crsqeca-lz.a.run.app/translate/How are you doing?
+
 
 ### Question 23
 
@@ -469,7 +484,7 @@ s194333 did not use any credit for this project, since she managed to use all he
 > Answer:
 
 ![Graphical reprsentation of architecture](figures/graphical_representation_of_architecture.png)
-The starting point of the diagram is our local pytorch application, which we wrapped in the **pytorch lightning** framework. This served as the inital steps of creating the mlops pipeline. We version-controled our project using **git** via **Github**. A new environment can be initialized using either **Conda** or **pip**. We opted to use `pipreqs` for finding the package requirements of our project, which made for seamless instantiation of the projects *requirements.txt*. We utilized **wandb** in conjunction with **pytorch lightning** for logging the 'experiments'/ training of our *NLP* model. For training configuration **wandb** performed satisfactory, hence **Hydra** was omited from this project. These are the essential parts which are contained into a **docker** container. Locally the project follows the codestructure of **Cookiecutter**. 
+The starting point of the diagram is our local pytorch application, which we wrapped in the **pytorch lightning** framework. This served as the inital steps of creating the mlops pipeline. We version-controled our project using **git** via **Github**. A new environment can be initialized using either **Conda** or **pip**. We opted to use `pipreqs` for finding the package requirements of our project, which made for seamless instantiation of the projects *requirements.txt*. We utilized `wandb` in conjunction with **pytorch lightning** for logging the 'experiments'/ training of our *NLP* model. For training configuration `wandb` performed satisfactory, hence `hydra` was omited from this project. These are the essential parts which are contained into a **docker** container. Locally the project follows the codestructure of **Cookiecutter**. 
 
 In order to utilize the **GPC** git and dvc both provides a link from the local machine. Git furthermore enabled **Github actions** for testing the code before uploading to a remote storage. Using a **trigger** connected to the github repository we created **docker images** in **docker containers** in the cloud. 
 
@@ -506,20 +521,13 @@ In general most of the tools and frameworks were relativly new for us, which res
 >
 > Answer:
 
-s183319, s194345, s185231, s184399, s194333
 
 Student s184399 created github repository with the cookiecutter structure. Furthermore the student was in charge of testing the models using unittesting and other previously mentioned tests. Furthermore he also contributed to building the docker images in the cloud and deploying the model. 
 
 Student s185231 was in charge of building the docker images in the cloud. Furthermore the student helped downloading the data and creating the scripts for training and testing the model.
 
-Student s183319 contributed to 
+Student s183319 heavily contributed to the report and was in charge of managing the dependencies and set up of version control as well as a lot of debugging.
 
-Student...
+Student 194333 was responsible for creating the scripts for training and prediction as well as afterwards training the model. Furthermore the student analysed the results and performed a sweep in W&B.
 
-s194333 was responsible for creating the scripts for training and prediction as well as afterwards training the model. 
-
- was in charge of building the docker images in cloud
-s194333 and s194345 was in charge of training the models
-
-
-
+Student s194245 was in charge of handeling the data -all the way from downloading to utilizing. Furthermore the student was in charge of utilizing google cloud for training. 
