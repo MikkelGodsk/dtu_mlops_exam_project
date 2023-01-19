@@ -11,13 +11,17 @@ from src.models.model import Model
 app = FastAPI()
 
 
-def newest_blob(bucket):
+def newest_model(bucket):
     blobs = list(bucket.list_blobs())
-    return sorted(
+    blobs = sorted(
         blobs,
         key=lambda blob: str(blob.time_created),
         reverse=True
-    )[0]
+    )
+    for blob in blobs:
+        if blob.name[-3:] == '.pt':
+            return blob
+        return None
 
 
 @app.get("/translate/{input}")
@@ -34,7 +38,7 @@ def translate(
     client = storage.Client()
     bucket = client.get_bucket("model-checkpoints-mlops-exam")
     if checkpoint is None:
-        blob = newest_blob(bucket)
+        blob = newest_model(bucket)
     else:
         blob = bucket.get_blob(checkpoint)
     filename = os.path.join('models', blob.name)
