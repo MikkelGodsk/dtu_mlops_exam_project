@@ -87,10 +87,14 @@ In this project we utilized the <a target="_blank" href="https://github.com/hugg
 > *complete copy of our development enviroment, one would have to run the following commands*
 >
 > Answer:
-
-We have created a requirements file with all the packages needed to be able to run the code for this project. The packages will be install by calling 'pip install -r requirements.txt'. 
-
-
+The new member would have to run the commands (assuming they have git and Python 3.10 installed):
+```
+git clone https://github.com/MikkelGodsk/dtu_mlops_exam_project.git
+cd dtu_mlops_exam_project
+pip install -r requirements.txt
+dvc pull
+python setup.py install
+```
 
 ### Question 5
 

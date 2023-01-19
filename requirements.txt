@@ -20,3 +20,5 @@ transformers==4.25.1
 wandb==0.13.7
 fastapi==0.89.1
 protobuf==3.19.5
+dvc
+dvc[gdrive]
