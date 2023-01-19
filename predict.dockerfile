@@ -22,6 +22,7 @@ RUN dvc remote add -d gcloud_storage gs://mlops-dataset-small
 RUN dvc pull
 
 # Set working directory as / and install dependencies
+EXPOSE $PORT
 WORKDIR /
 
 RUN mkdir app
