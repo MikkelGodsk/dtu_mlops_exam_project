@@ -29,6 +29,6 @@ RUN mkdir app
 # Set entry point, i.e. which file we run with which argument when running the docker container.
 # The -u flag makes it print to console rather than the docker log file.
 #ENTRYPOINT ["python", "-u", "src/models/predict_model.py"]
-#CMD exec uvicorn src.models.predict_model:app --host 0.0.0.0 --workers 1 --port 8000
-ENTRYPOINT ["uvicorn", "src.models.predict_model:app", "--host", "0.0.0.0", "--workers", "1", "--port", "8000"]
+CMD exec uvicorn src.models.predict_model:app --host 0.0.0.0 --workers 1 --port $PORT
+#ENTRYPOINT ["uvicorn", "src.models.predict_model:app", "--host", "0.0.0.0", "--workers", "1", "--port", $PORT]
 #  
