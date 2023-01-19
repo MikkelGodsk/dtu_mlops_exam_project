@@ -76,9 +76,23 @@ endif
 test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
+train:
+	$(PYTHON_INTERPRETER) src/models/train_model.py --wandbkey=$(wandbkey)
+
+## Build docker image for training.
+build_train_dockerfile:
+	docker build -f trainer.dockerfile . -t traintranslate --build-arg KEY_FILE=$(keyfile)
+# --build-arg KEY_FILE=$(keyfile)
+
+## Run docker image for training. Requires wandb key using argument "wandbkey=xxxxxx"
+run_train_dockerfile:
+	docker run --name traincontainer -e WANDBKEY=$(wandbkey) traintranslate
+
+## Build docker image for predicting translations
 build_predict_dockerfile:
 	docker build -f predict.dockerfile . -t translate2german
 
+## Run docker image for predicting translations
 run_predict_dockerfile: 
 	docker run --name translatecontainer -p 8501:8501 -e PORT=8501 translate2german
 
