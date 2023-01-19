@@ -88,15 +88,15 @@ In this project we utilized the [Transformers](https://github.com/huggingface/tr
 >
 > Answer:
 
-We used a requirements.txt for managing our dependencies. The list of dependencies was auto-generated using pipreqs. To get a complete copy of our development enviroment, one would have to run the following commands (assuming they have git and Python 3.10 installed):
+Packages are mananged in conda environments. The packages required can be found in the requirements.txt file which is placed in the top folder in the cookiecutter structure. In this txt file we have a complete list of all used packages and relevant versions in this project. The requirement.txt file was auto-generated using the command pipreqs. To get a complete copy of our development enviroment, one would have to run the following commands (assuming they have git and Python 3.10 installed):
 ```
 git clone https://github.com/MikkelGodsk/dtu_mlops_exam_project.git
 cd dtu_mlops_exam_project
+conda create -n myenv
 pip install -r requirements.txt
 dvc pull
 python setup.py install
 ```
-
 
 ### Question 5
 
@@ -123,7 +123,7 @@ We also included the tests/ folder which holds scripts for conducting different 
 >
 > Answer:
 
-In this project we have used typing and written comments when the code is not completly self explanatory, in addition to function docstrings. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check. Lastly, we used isort to sort our imports.
+In this project we have used typing and written comments when the code is not completly self explanatory, in addition to function docstrings. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check. Lastly, we used isort to sort our imports. The code quality and format is tested in github actions, hence constantly ensuring the quality.
 
 ## Version control
 
@@ -168,11 +168,6 @@ The reason for the code coverage less than 100% in the file `model.py` is that w
 
 In `predict_model.py`, the reason for the coverage being less than 100% is that we do not test with loading in a checkpoint. Unless we transfered this to GitHub, it would not be able to run in actions. Lastly, we have tested the code run in the `if __name__ == '__main__':`-block, however we had to open a pipe to another cmd using `os.popen` doing so, so the code is simply not counted here.
 
-Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data (en-de) is given as a string and a label. When testing the model the following things must be satisfied
-- The model is in torch
-- The model outputs the translated sentence as a list containing a string
-- In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
-
 ### Question 9
 
 > **Did your workflow include using branches and pull requests? If yes, explain how. If not, explain how branches and**
@@ -186,7 +181,7 @@ Testing the dataset consists of loading the data and checking whether the format
 >
 > Answer:
 
-Yes, we added branch protection on the main branch. Hence we created a personal branch where changes were made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immediately.
+We added branch protection on the main branch. Hence we created a personal branch where changes were made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immediately.
 
 ### Question 10
 
@@ -201,7 +196,7 @@ Yes, we added branch protection on the main branch. Hence we created a personal 
 >
 > Answer:
 
-The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in Google Cloud and used dvc to manage this. However we did not have enough credit to sustain this service hence we moved the data to google drive. As such data control proved to be very usefull. In addition, data control was an easy update to implement on all our devices since it only required some simple terminal commands.
+The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in Google Cloud and used dvc to manage this. However s194333 did not have enough credit to sustain this service hence we has to create another bucket containing the same data with a different billing account. However we also stored the data on google drive, in case we potentially would use all credits on cloud again. Hence data version control proved to be very usefull for switching between different data storage options. In addition, data control was an easy update to implement on all our devices since it only required some simple terminal commands. 
 
 ### Question 11
 
@@ -217,7 +212,11 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 >
 > Answer:
 
-We have organized our continues integration into three separate files: one for doing unittesting, one for running isort testing and one for running flake8. The isort test and the flake8 test are only run on the Ubuntu operating system and the python version 3.8. The unittesting is also run on the windows operating system and python version 3.10. Here we also make use of caching to speed up the process.
+We have organized our continues integration into three separate files: one for doing unittesting, one for running isort testing and one for running flake8. The isort test and the flake8 test are only run on the Ubuntu operating system and the python version 3.8. The unittesting is also run on the windows operating system and python version 3.10. Here we also make use of caching to speed up the process. Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data (en-de) is given as a string and a label. When testing the model the following things must be satisfied
+- The model is in torch
+- The model outputs the translated sentence as a list containing a string
+- In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
+
 
 ## Running code and tracking experiments
 
@@ -283,6 +282,7 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
+In our project reproducablity is very important, hence we utilize Docker in order to ensure that the application can be run on all devices. Hence we created docker images 
 For our project we developed several images: one for training on cpu and one for training on gpu and likewise for inference on cpu and gpu. Furthermore we have devoloped images for deployment on cloud. For example to run the training docker image: `docker run trainer:latest`. Link to docker file: <weblink>*
 
 ### Question 16
@@ -378,6 +378,8 @@ Here the bucket wmt19-de-en refers to the full dataset whereas 30k-dataset refer
 > 
 > Answer:
 
+We managed to deploy our model in google cloud:
+https://translation-gcp-app-jc4crsqeca-lz.a.run.app/translate/The%20house%20is%20nice.
 For deployment we wrapped our model into application using FastAPI. 
 
 ### Question 23
@@ -393,8 +395,7 @@ For deployment we wrapped our model into application using FastAPI.
 >
 > Answer:
 
-We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could measure translation accuracy (based e.g on user rating) that would inform us about the performance and hence usefullness of our model. 
-Provided we modelled the german and english language perfectly, our model would be quite prone to data-drifting. The only real issue would be words having new meanings or new words being adapted to the langugaes. However, this *perfect* modelling is rarely the case in real life as the dataset for a given translation task, will ultimately only be a subset of the distribution modelling the language. This means that our model will be context dependent. A weakness derived from this could e.g. be if the training dataset was exceedingly formal and we received an input which was very informal. As such, monitoring a user-based translation accuracy score could inform when our model becomes outdated.
+We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could measure translation accuracy (based e.g on user rating) that would inform us about the performance and hence usefullness of our model. Provided we modelled the german and english language perfectly, our model would be quite prone to data-drifting. The only real issue would be words having new meanings or new words being adapted to the languages. However, this *perfect* modelling is rarely the case in real life as the dataset for a given translation task, will ultimately only be a subset of the distribution modelling the language. This means that our model will be context dependent. A weakness derived from this could e.g. be if the training dataset was exceedingly formal and we received an input which was very informal. As such, monitoring a user-based translation accuracy score could inform when our model becomes outdated.
 
 ### Question 24
 
@@ -429,7 +430,7 @@ s194333 did not use any credit for this project, since she managed to use all he
 >
 > Answer:
 
---- question 25 fill here ---
+![Graphical reprsentation of architecture](figures/graphical_representation_of_architecture.png)
 
 ### Question 26
 
@@ -443,7 +444,9 @@ s194333 did not use any credit for this project, since she managed to use all he
 >
 > Answer:
 
-We especially spent a lot of time on trying to train the model on cloud.
+Our first time consuming task was to download the data. This was downloaded from huggingface which took a long time. We also spent an excessive amount of time trying to train our model on cloud. Some main factors contributing to this issue, was our funding running short and having to authenticate multiple frameworks within a docker container. s194333 created the project on GCP, however she quickly (within 48 hours) ran short on funding (complementary of the course) due to operations ineracting with the *bucket* storing our data. We aren't entirely certain as to what depleted the grants, however this greatly restricted our work. From docker we needed to authenticate dvc, GCP, in addition to `wandb`. This proved tremendously cumbersome as the authentication requires certfication, which we would preferably avoid storing in the docker image. During this process we spent a lot of time debugging. Due to long building times errors didn't occur immediatly, which resulted in a lot of reapeated idle time. 
+
+In general most of the tools and frameworks were relativly new for us, which resulted in a lot of google searches and unknown errors. The exercises significantly prepared us for conducting the project, however we still had a lot to learn when making the project. This challenged us in many ways, however we managed to overcome these one by one.
 
 ### Question 27
 
@@ -459,5 +462,3 @@ We especially spent a lot of time on trying to train the model on cloud.
 > *All members contributed to code by...*
 >
 > Answer:
-
---- question 27 fill here ---
