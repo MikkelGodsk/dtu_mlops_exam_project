@@ -11,3 +11,4 @@ dvc
 dvc[gs]
 pydantic
 uvicorn
+google-cloud-storage

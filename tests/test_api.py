@@ -8,8 +8,8 @@ def test_api_request_valid():
     response = client.get("/translate/The house is wonderful")
     assert response.status_code == 200
     assert response.json() == {
-        'en': "The house is wonderful",
-        'de translation': 'Das Haus ist wunderbar.'
+        "en": "The house is wonderful",
+        "de translation": "Das Haus ist wunderbar.",
     }
 
 

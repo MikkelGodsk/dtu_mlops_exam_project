@@ -1,9 +1,9 @@
 import pytorch_lightning as pl
-from torch.utils.data import DataLoader
 import torch
-from pytorch_lightning.callbacks import ModelCheckpoint
-
 from datasets import Dataset
+from pytorch_lightning.callbacks import ModelCheckpoint
+from torch.utils.data import DataLoader
+
 from src.models.model import Model
 
 if __name__ == "__main__":
