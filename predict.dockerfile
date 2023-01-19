@@ -2,7 +2,11 @@
 #FROM python:3.10-slim
 FROM huggingface/transformers-pytorch-cpu
 
+# Use EXPOSE so we can give docker run the appropriate commandline argument (PORT) as:
+# docker run predict:latest -e PORT=8000
 EXPOSE $PORT
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 # Run a bunch of linux commands
 RUN apt update && \         
@@ -13,9 +17,6 @@ RUN apt update && \
 COPY src/ src/
 COPY requirements_predict.txt requirements_predict.txt
 COPY setup.py setup.py
-
-RUN export LC_ALL=C.UTF-8
-RUN export LANG=C.UTF-8
 
 RUN pip install -r requirements_predict.txt --no-cache-dir
 
