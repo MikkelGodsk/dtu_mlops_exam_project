@@ -63,9 +63,9 @@ def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
         devices = None
 
     if debug_mode:
-        limit = 0.1
+        limit = 0.01
     else:
-        limit = 1
+        limit = 1.0
 
     trainer = pl.Trainer(
         max_epochs=epochs,
@@ -82,7 +82,7 @@ def train(config: str, wandbkey:Optional[str]=None, debug_mode:bool=False):
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
 
-    torch.save(model.state_dict(), os.path.join("models","checkpoints","epoch=final.ckpt"))
+    torch.save(model.state_dict(), "gs://model-checkpoints-mlops-exam/models/epoch=final.ckpt") #os.path.join("models","checkpoints","epoch=final.ckpt"))
     print("Done!")
 
     # Mangler at uploade de gemte filer til drive.
