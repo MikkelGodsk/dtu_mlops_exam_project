@@ -47,11 +47,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - uses: iterative/setup-dvc@v1
       - name: Download data
-        run: dvc pull 
-        env:
-        #  GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-          GOOGLE_APPLICATION_CREDENTIALS : ${{ secrets.GOOGLE_CLOUD_KEY }}
+        run: dvc pull
       - name: Test with pytest
         run: pytest
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS : ${{ secrets.GOOGLE_CLOUD_KEY }}
