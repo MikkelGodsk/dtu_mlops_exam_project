@@ -2,6 +2,8 @@
 #FROM python:3.10-slim
 FROM huggingface/transformers-pytorch-cpu
 
+EXPOSE $PORT
+
 # Run a bunch of linux commands
 RUN apt update && \         
     apt install --no-install-recommends -y build essential gcc & \
@@ -12,8 +14,8 @@ COPY src/ src/
 COPY requirements_predict.txt requirements_predict.txt
 COPY setup.py setup.py
 
-#RUN export LC_ALL=C.UTF-8
-#RUN export LANG=C.UTF-8
+RUN export LC_ALL=C.UTF-8
+RUN export LANG=C.UTF-8
 
 RUN pip install -r requirements_predict.txt --no-cache-dir
 
@@ -22,7 +24,6 @@ RUN dvc remote add -d gcloud_storage gs://mlops-dataset-small
 RUN dvc pull
 
 # Set working directory as / and install dependencies
-EXPOSE $PORT
 WORKDIR /
 
 RUN mkdir app
