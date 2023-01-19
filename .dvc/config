@@ -1,2 +1,0 @@
-['remote "gcloud_storage"']
-    url = gs://mlops-dataset-small
