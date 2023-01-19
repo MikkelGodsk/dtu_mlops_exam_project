@@ -64,12 +64,12 @@ s183319, ss194345, s185231, s184399, s194333
 > Answer length: 100-200 words.
 >
 > Example:
-> *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
+> *We used the third-party framework ... in our projekkkkct. We used functionality ... and functionality ... from the*
 > *package to do ... and ... in our project*.
 >
 > Answer:
 
-In this project we utilized the <a target="_blank" href="https://github.com/huggingface/transformers">Transformers</a> repository from the Huggingface group. This repository provides the <a target="_blank" href="https://huggingface.co/t5-small">t5-small model</a>, which is a language model that can translate text from one language to another. In this project we have used the Trainer class in the pytorch lightening framework to train and test the t5-small model on a subset of the en-de subset of the <a target="_blank" href="https://huggingface.co/datasets/wmt19"> WMT19 dataset</a>. We have used Weights and biases to both handle the configuration file with the hyperparameters for the model and for logging the training.
+In this project we utilized the [Transformers](https://github.com/huggingface/transformers) repository from the Huggingface group. This repository provides the [t5-small model](https://huggingface.co/t5-small), which is a natural language processing (NLP) model that can translate text from one language to another. In this project we have used the Trainer class in the pytorch lightning framework to train and test the t5-small model on a subset of the english/ german (en-de) subset of the [WMT19 dataset](https://huggingface.co/datasets/wmt19) (from the fourth conference on machine translation). We have used Weights and biases (`wandb`) to both handle the configuration file with the hyperparameters for the model and for logging the training and validation loss. 
 
 ## Coding environment
 
@@ -87,7 +87,8 @@ In this project we utilized the <a target="_blank" href="https://github.com/hugg
 > *complete copy of our development enviroment, one would have to run the following commands*
 >
 > Answer:
-The new member would have to run the commands (assuming they have git and Python 3.10 installed):
+
+We used a requirements.txt for managing our dependencies. The list of dependencies was auto-generated using pipreqs. To get a complete copy of our development enviroment, one would have to run the following commands (assuming they have git and Python 3.10 installed):
 ```
 git clone https://github.com/MikkelGodsk/dtu_mlops_exam_project.git
 cd dtu_mlops_exam_project
@@ -95,6 +96,7 @@ pip install -r requirements.txt
 dvc pull
 python setup.py install
 ```
+
 
 ### Question 5
 
@@ -108,8 +110,8 @@ python setup.py install
 > *experiments.*
 > Answer:
 
-The overall structure is initialized with the cookiecutter template. In general we tried to as much as possible to follow the cookiecutter structure. Since the original WMT19 dataset took up to much memory in both cloud and drive, we processed the data locally and only included a subset in the proccessed folder in the data folder. Thus we deleted the data/external, data/interim and data/raw folders. We also deleted the folders notebooks, references, src/features, src/visualization, since we did not use these. We filled out the src/data folder and the src/models folder in which we also included a file for evaluating the model and a folder config, with the configuration files.
-We also included the tests folder which holds scripts for conducting different pytests.
+The overall structure is initialized with the cookiecutter template. In general we tried to follow the cookiecutter structure as much as possible. Since the original WMT19 dataset took up too much memory in both cloud and drive, we processed the data locally and only included a subset in the proccessed folder in the data folder. Thus we deleted the data/external/, data/interim/ and data/raw/ folders. We also deleted the folders notebooks/, references/, src/features/, src/visualization/, since we did not use these. We filled out the src/data/ folder and the src/models/ folder in which we also included a file src/models/evaluate_model.py for evaluating the model and a folder src/models/config/, with the configuration files.
+We also included the tests/ folder which holds scripts for conducting different pytests.
 
 
 ### Question 6
@@ -121,7 +123,7 @@ We also included the tests folder which holds scripts for conducting different p
 >
 > Answer:
 
-In this project we have used typing and written comments when the code is not completly self explanatory. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check that the code is pep8 compliant. Lastly, we used isort to sort our imports.
+In this project we have used typing and written comments when the code is not completly self explanatory, in addition to function docstrings. We tried to ensure that the code is pep8 compliant. To obtain this we have used black to format the code and flake8 to check. Lastly, we used isort to sort our imports.
 
 ## Version control
 
@@ -138,7 +140,7 @@ In this project we have used typing and written comments when the code is not co
 
 ### Question 8
 
-> **What is the total code coverage (in percentage) of your code? If you code had an code coverage of 100% (or close**
+> **What is the total code coverage (in percentage) of your code? If you code had a code coverage of 100% (or close**
 > **to), would you still trust it to be error free? Explain you reasoning.**
 >
 > **Answer length: 100-200 words.**
@@ -150,47 +152,41 @@ In this project we have used typing and written comments when the code is not co
 > Answer: 
 
 The total code coverage of code is 93%, which includes all our source code.
-
-Name                          Stmts   Miss  Cover   Missing
------------------------------------------------------------
-src\__init__.py                   0      0   100%
-src\models\__init__.py            2      0   100%
-src\models\model.py              48      4    92%   45, 47, 49, 51
-src\models\predict_model.py      21      7    67%   21, 29-37
-tests\__init__.py                 5      0   100%
-tests\test_api.py                11      0   100%
-tests\test_dataset.py            18      0   100%
-tests\test_model.py              43      0   100%
------------------------------------------------------------
-TOTAL                           148     11    93%
-
+| Name                          | STMTS | Miss | Cover | Missing        |
+|-------------------------------|-------|------|-------|----------------|
+| ./src/\_\_init\_\_.py             | 0     | 0    | 100%  | -              |
+| ./src/models/\_\_init\_\_.py      | 2     | 0    | 100%  | -              |
+| ./src/models/model.py         | 48    | 4    | 92%   | 45, 47, 49, 51 |
+| ./src/models/predict_model.py | 21    | 7    | 67%   | 21, 29-37      |
+| ./tests/\_\_init\_\_.py           | 5     | 0    | 100%  | -              |
+| ./tests/test_api.py           | 11    | 0    | 100%  | -              |
+| ./tests/test_dataset.py       | 18    | 0    | 100%  | -              |
+| ./tests/test_model.py         | 43    | 0    | 100%  | -              |
+| TOTAL                         | 148   | 11   | 93%   | -              |
 
 The reason for the code coverage less than 100% in the file `model.py` is that we deemed some of the checks in the constructor (`__init__`) too trivial to test. These are just checking for the data type and non-negativity of learning-rate and batch size.
 
 In `predict_model.py`, the reason for the coverage being less than 100% is that we do not test with loading in a checkpoint. Unless we transfered this to GitHub, it would not be able to run in actions. Lastly, we have tested the code run in the `if __name__ == '__main__':`-block, however we had to open a pipe to another cmd using `os.popen` doing so, so the code is simply not counted here.
 
-
-
-The tests are conducted upon pushes and pull-requests to the merge branch.
-Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data is given as a string and a label (en-de). When testing the model the following things must be satisfied
+Testing the dataset consists of loading the data and checking whether the format is correct. More precicely we check if the data (en-de) is given as a string and a label. When testing the model the following things must be satisfied
 - The model is in torch
 - The model outputs the translated sentence as a list containing a string
 - In both training, validation and test the model outputs a torch tensor containing a float (not NaN)
 
 ### Question 9
 
-> **Did you workflow include using branches and pull requests? If yes, explain how. If not, explain how branches and**
+> **Did your workflow include using branches and pull requests? If yes, explain how. If not, explain how branches and**
 > **pull request can help improve version control.**
 >
 > Answer length: 100-200 words.
 >
 > Example:
-> *We made use of both branches and PRs in our project. In our group, each member had an branch that they worked on in*
+> *We made use of both branches and PRs in our project. In our group, each member had a branch that they worked on in*
 > *addition to the main branch. To merge code we ...*
 >
 > Answer:
 
-Yes, we added branch protection on the main branch. Hence we created a personal branch where changes is made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immidiatly.
+Yes, we added branch protection on the main branch. Hence we created a personal branch where changes were made. We then used pull requests to merge with the main branch quite often. A pull request typically only concerned a few changes in a limited amount of scripts. Hence we avoided having an unmanageable amount of branches as well as reduced the number of merge conflicts. Before merging a branch with the main branch the tests are conducted to ensure that the merge will result in a working code. Furthermore when making major changes we assured that pull request were created and reviewed immediately.
 
 ### Question 10
 
@@ -205,11 +201,11 @@ Yes, we added branch protection on the main branch. Hence we created a personal 
 >
 > Answer:
 
-The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in google cloud and used dvc to manage this. However we did not have enough credit to sustain this service hence we moved the data to google drive. Hereby data controll proved to be very usefull since this update on all our devices was easily made with a simple terminal commands.
+The wmt19 dataset originally contained around 9GB of data. Hence we decided to create a subset of the dataset. Data version control hereby contributed to an easy update of the data. We initially created a bucket in Google Cloud and used dvc to manage this. However we did not have enough credit to sustain this service hence we moved the data to google drive. As such data control proved to be very usefull. In addition, data control was an easy update to implement on all our devices since it only required some simple terminal commands.
 
 ### Question 11
 
-> **Discuss you continues integration setup. What kind of CI are you running (unittesting, linting, etc.)? Do you test**
+> **Discuss your continues integration setup. What kind of CI are you running (unittesting, linting, etc.)? Do you test**
 > **multiple operating systems, python version etc. Do you make use of caching? Feel free to insert a link to one of**
 > **your github actions workflow.**
 >
@@ -221,7 +217,7 @@ The wmt19 dataset originally contained around 9GB of data. Hence we decided to c
 >
 > Answer:
 
-We have organized our CI into 3 separate files: one for doing unittesting, one for running isort testing and one for running flake8. The isort and flake8 test is only run on the Ubuntu operating system and the python version 3.8, the unittesting is also run on the windows operating system and python version 3.10. 
+We have organized our continues integration into three separate files: one for doing unittesting, one for running isort testing and one for running flake8. The isort test and the flake8 test are only run on the Ubuntu operating system and the python version 3.8. The unittesting is also run on the windows operating system and python version 3.10. Here we also make use of caching to speed up the process.
 
 ## Running code and tracking experiments
 
@@ -231,7 +227,7 @@ We have organized our CI into 3 separate files: one for doing unittesting, one f
 ### Question 12
 
 > **How did you configure experiments? Did you make use of config files? Explain with coding examples of how you would**
-> **run a experiment.**
+> **run an experiment.**
 >
 > Answer length: 50-100 words.
 >
@@ -287,7 +283,7 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed several images: one for training on cpu and one for training on gpu and likewise for inference on cpu and gpu. Furthermore we have devoloped images for deployment on cloud. For example to run the training docker image: `docker run trainer:latest`. Link to docker file: <weblink>*
 
 ### Question 16
 
@@ -302,7 +298,8 @@ When training the model the hyperparameters are loaded from the configuration fi
 >
 > Answer:
 
---- question 16 fill here ---
+For debugging we used the build in debugger in visual studio code and when this was not enought we used simple print statements.
+We considered saving the tokenized dataset, which would probably speed up the training processes, such that the tokenization is not being done in each training step.
 
 ## Working in the cloud
 
