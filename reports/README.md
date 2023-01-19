@@ -393,7 +393,8 @@ For deployment we wrapped our model into application using FastAPI.
 >
 > Answer:
 
-We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could measure ... and ... that would inform us about this ... behaviour of our application.
+We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could measure translation accuracy (based e.g on user rating) that would inform us about the performance and hence usefullness of our model. 
+Provided we modelled the german and english language perfectly, our model would be quite prone to data-drifting. The only real issue would be words having new meanings or new words being adapted to the langugaes. However, this *perfect* modelling is rarely the case in real life as the dataset for a given translation task, will ultimately only be a subset of the distribution modelling the language. This means that our model will be context dependent. A weakness derived from this could e.g. be if the training dataset was exceedingly formal and we received an input which was very informal. As such, monitoring a user-based translation accuracy score could inform when our model becomes outdated.
 
 ### Question 24
 
